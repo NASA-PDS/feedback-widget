@@ -17,10 +17,10 @@ var log = function( msg ) {
 // function to remove elements, input as arrays
 removeElements = function( remove ) {
     for (var i = 0, len = remove.length; i < len; i++ ) {
-        var item = Array.prototype.pop.call( remove );
+    var item = Array.prototype.pop.call( remove );
         if ( item !== undefined ) {
             if (item.parentNode !== null ) { // check that the item was actually added to DOM
-                item.parentNode.removeChild( item );
+               item.parentNode.removeChild( item );
             }
         }
     }
@@ -71,10 +71,18 @@ scriptLoader = function( script, func ){
     }
 
 },
-nextButton,
+sendButton,
 H2C_IGNORE = "data-html2canvas-ignore",
-currentPage,
-modalBody = document.createElement("div");
+HOST = "https://pds-gamma.jpl.nasa.gov/",
+captchaUrl = "feedback/recaptcha-v3-verify.php",
+feedbackUrl = "email-service/EmailSendingServlet",
+modal = document.createElement("div"),
+modalBody = document.createElement("div"),
+modalHeader = document.createElement("div"),
+modalFooter = document.createElement("div"),
+captchaScore = 0;
+
+window.captchaCallback = function( response ) {};
 
 window.Feedback = function( options ) {
 
@@ -83,56 +91,26 @@ window.Feedback = function( options ) {
     // default properties
     options.label = options.label || "Feedback";
     options.header = options.header || "Your Feedback";
-    options.url = options.url || "https://pds-gamma.jpl.nasa.gov/email-service/EmailSendingServlet";
-    options.adapter = options.adapter || new window.Feedback.XHR( options.url );
-
-    options.nextLabel = options.nextLabel || "Send Feedback";
-    options.reviewLabel = options.reviewLabel || "Review";
-    options.sendLabel = options.sendLabel || "Send";
-    options.closeLabel = options.closeLabel || "Close";
-
     options.messageSuccess = options.messageSuccess || "Thank you for making the PDS a better site. If you provided an email address, a PDS representative will get back to you as soon as possible.";
-    options.messageError = options.messageError || "There was an error sending your feedback. If the problems persists, please email pds_operator@jpl.nasa.gov.";
-
-    if (options.pages === undefined ) {
-        options.pages = [
-            new window.Feedback.Form()
-            //new window.Feedback.Screenshot( options ),
-            //new window.Feedback.Review()
-        ];
-    }
+    options.messageError = options.messageError || "There was an error sending your feedback. If the problem persists, please email pds_operator@jpl.nasa.gov.";
+    options.page = options.page || new window.Feedback.Form();
 
     var button,
-    modal,
-    currentPage,
     glass = document.createElement("div"),
     returnMethods = {
 
         // open send feedback modal window
         open: function() {
-            var len = options.pages.length;
-            currentPage = 0;
-            for (; currentPage < len; currentPage++) {
-                // create DOM for each page in the wizard
-                if ( !(options.pages[ currentPage ] instanceof window.Feedback.Review) ) {
-                    options.pages[ currentPage ].render();
-                }
-            }
-
-            var a = element("a", "x"),
-            modalHeader = document.createElement("div"),
-            // modal container
-            modalFooter = document.createElement("div");
-
-            modal = document.createElement("div");
+    
+            options.page.render();  
             document.body.appendChild( glass );
+            button.disabled = true;
 
             // modal close button
+            var a = element("a", "x");
             a.className =  "feedback-close";
             a.onclick = returnMethods.close;
             a.href = "#";
-
-            button.disabled = true;
 
             // build header element
             modalHeader.appendChild( a );
@@ -142,70 +120,36 @@ window.Feedback = function( options ) {
             modalBody.className = "feedback-body";
 
             emptyElements( modalBody );
-            currentPage = 0;
-            modalBody.appendChild( options.pages[ currentPage++ ].dom );
+            modalBody.appendChild( options.page.dom );
 
-            // Next button
-            nextButton = element( "button", options.nextLabel );
-	    /*nextButton = document.createElement("input");
-	    nextButton.type = "submit";
-	    nextButton.value = "Send Feedback";
-	    nextButton.disabled = "";*/
-
-            nextButton.className =  "feedback-btn";
-            nextButton.onclick = function() {
-
-                if (currentPage > 0 ) {
-                    if ( options.pages[ currentPage - 1 ].end( modal ) === false ) {
-                        // page failed validation, cancel onclick
-                        return;
-                    }
-                }
-
-                emptyElements( modalBody );
-
-                if ( currentPage === len ) {
-                    returnMethods.send( options.adapter );
-                } else {
-
-                    options.pages[ currentPage ].start( modal, modalHeader, modalFooter, nextButton );
-
-                    if ( options.pages[ currentPage ] instanceof window.Feedback.Review ) {
-                        // create DOM for review page, based on collected data
-                        options.pages[ currentPage ].render( options.pages );
-                    }
-
-                    // add page DOM to modal
-                    modalBody.appendChild( options.pages[ currentPage++ ].dom );
-
-                    // if last page, change button label to send
-                    if ( currentPage === len ) {
-                        nextButton.firstChild.nodeValue = options.sendLabel;
-                    }
-
-                    // if next page is review page, change button label
-                    if ( options.pages[ currentPage ] instanceof window.Feedback.Review ) {
-                        nextButton.firstChild.nodeValue = options.reviewLabel;
-                    }
-
-                }
-	    };
-
+            // Send button
+            sendButton = document.createElement("input");
+            sendButton.type = "submit";
+            sendButton.value = "Send Feedback";
+            sendButton.setAttribute("class", "feedback-btn g-recaptcha");
+            sendButton.setAttribute("data-callback", "captchaCallback");
+            sendButton.setAttribute("id", "recaptcha"); 
+ 
+            // reCAPTCHA branding
+            rcBrand = document.createElement("p");
+            rcBrand.innerHTML = 'This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of Service</a> apply.';
+            rcBrand.className = "reCaptcha-brand";
+    
             modalFooter.className = "feedback-footer";
-            modalFooter.appendChild( nextButton );
+            modalFooter.appendChild( rcBrand );
+            modalFooter.appendChild( sendButton );
 
-
-            modal.className =  "feedback-modal";
+            modal.setAttribute("id", "feedback-form");
+            modal.className = "feedback-modal";
             modal.setAttribute(H2C_IGNORE, true); // don't render in html2canvas
-
-
+            
             modal.appendChild( modalHeader );
             modal.appendChild( modalBody );
             modal.appendChild( modalFooter );
-
+            
             document.body.appendChild( modal );
-
-	    //grecaptcha.render("captcha", {sitekey: "6Le5S3kUAAAAALndozv5C6jmO6PX2IS81Xta03UZ", theme: "light"});
+        
+            window.grecaptcha.render("recaptcha", {sitekey: "6LfLCIgUAAAAAI3xLW5PQijxDyZcaUUlTyPDfYlZ"});
         },
 
 
@@ -213,22 +157,15 @@ window.Feedback = function( options ) {
         close: function() {
 
             button.disabled = false;
+    
+            window.grecaptcha.reset();
 
             // remove feedback elements
+            emptyElements( modalHeader );
+            emptyElements( modalFooter );
             removeElements( [ modal, glass ] );
 
-            // call end event for current page
-            if (currentPage > 0 ) {
-                options.pages[ currentPage - 1 ].end( modal );
-            }
-
-            // call close events for all pages
-            for (var i = 0, len = options.pages.length; i < len; i++) {
-                options.pages[ i ].close();
-            }
-
             return false;
-
         },
 
         // send data
@@ -239,15 +176,6 @@ window.Feedback = function( options ) {
                 throw new Error( "Adapter is not an instance of Feedback.Send" );
             }
 
-            // fetch data from all pages
-            for (var i = 0, len = options.pages.length, data = [], p = 0, tmp; i < len; i++) {
-                if ( (tmp = options.pages[ i ].data()) !== false ) {
-                    data[ p++ ] = tmp;
-                }
-            }
-
-            /*nextButton.disabled = true;*/
-
             emptyElements( modalBody );
             modalBody.appendChild( loader() );
 
@@ -255,27 +183,53 @@ window.Feedback = function( options ) {
             adapter.send( data, function( success ) {
 
                 emptyElements( modalBody );
-                nextButton.disabled = false;
+                sendButton.disabled = false;
 
-                nextButton.firstChild.nodeValue = options.closeLabel;
+                sendButton.value = "Close";
 
-                nextButton.onclick = function() {
+                sendButton.onclick = function() {
                     returnMethods.close();
                     return false;
                 };
 
-		// TODO - fails on remote nodes due to CORS
-		// figure out if it can work or just default to "success"
-                //if ( success === true ) {
+        // TODO - fails on remote nodes due to CORS
+        // figure out if it can work or just default to "success"
+                // if ( success === true ) {
                     modalBody.appendChild( document.createTextNode( options.messageSuccess ) );
-                //} else {
+                // }
+        //} else {
                 //    modalBody.appendChild( document.createTextNode( options.messageError ) );
                 //}
 
-            } );
+            });
 
-        }
+        },
+
+        captchaCallback: function( response ) { 
+            $.ajax({
+                type: "POST",
+                url: HOST + captchaUrl,
+                data: { response: response },
+                success: function( data ) {
+                    console.log(data);
+                    captchaScore = parseFloat(data.substring(data.indexOf("float") + 6, data.indexOf("float") + 9));
+                    if (captchaScore > 0.70) {
+                        options.url = options.url || HOST + feedbackUrl;
+                        options.adapter = options.adapter || new window.Feedback.XHR( options.url );
+                        emptyElements( modalBody );
+                        returnMethods.send( options.adapter );
+                    }    
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+                }
+            });
+           window.grecaptcha.reset();
+       }
+    
     };
+
+    window.captchaCallback = returnMethods.captchaCallback;
 
     glass.className = "feedback-glass";
     //glass.style.pointerEvents = "none";
@@ -285,11 +239,10 @@ window.Feedback = function( options ) {
 
     var button = document.createElement("button");
     var img = document.createElement("img");
-    img.src = 'https://pds-gamma.jpl.nasa.gov/feedback/image/msg_icon.png';
+    img.src = HOST + 'feedback/image/msg_icon.png';
     img.height = '15';
     button.appendChild(img)
     button.appendChild(document.createTextNode('  ' + options.label));
-    //button.className = "feedback-btn feedback-bottom-right";
     button.className = "feedbackTab";
 
     button.setAttribute(H2C_IGNORE, true);
@@ -313,9 +266,6 @@ window.Feedback.Page.prototype = {
     data: function() {
         // don't collect data from page by default
         return false;
-    },
-    review: function() {
-        return null;
     },
     end: function() { return true; }
 
@@ -355,7 +305,7 @@ window.Feedback.Form = function( elements ) {
         type: "select",
         name: "Type",
         label: "Type",
-	values: "Comment,Question,Problem/Bug,Kudos,Other",
+    values: "Comment,Question,Problem/Bug,Kudos,Other",
         required: false
       },
       /*{
@@ -369,7 +319,7 @@ window.Feedback.Form = function( elements ) {
         name: "Topic",
         label: "Topic",
         required: true
-	},*/
+    },*/
       {
         type: "textarea",
         name: "Comment",
@@ -391,52 +341,41 @@ window.Feedback.Form.prototype.render = function() {
     emptyElements( this.dom );
     for (; i < len; i++) {
         item = this.elements[ i ];
-	var div = document.createElement("div");
-	div.classList.add("feedback-input");
+    var div = document.createElement("div");
+    div.classList.add("feedback-input");
         switch( item.type ) {
             case "textarea":
                 div.appendChild( element("label", item.label + ":" + (( item.required === true ) ? " *" : "")) );
-		var textarea = document.createElement("textarea");
-		textarea.name = item.name;
+        var textarea = document.createElement("textarea");
+        textarea.name = item.name;
                 div.appendChild( ( item.element = textarea ) );
-		/*this.dom.appendChild(textarea);*/
+        /*this.dom.appendChild(textarea);*/
                 break;
             case "input":
                 div.appendChild( element("label", item.label + ": " + (( item.required === true) ? "*" : "")) );
-		var input = document.createElement("input");
-		input.name = item.name;
+        var input = document.createElement("input");
+        input.name = item.name;
                 div.appendChild( (item.element = input) );
                 break;
             case "select":
                 div.appendChild( element("label", item.label + ": " + (( item.required === true) ? "*" : "")) );
-		var select = document.createElement("select");
-		select.name = item.name;
-		var options = item.values.split(",");
-		var option;
-		for (j = 0; j < options.length; j++) {
-		    option = document.createElement("option");
-		    option.value = option.textContent = options[j];
-		    select.appendChild(option);
-		}
-		div.appendChild( (item.element = select) );
-                /*this.dom.appendChild( (item.element = document.createElement("select")).append );
-		  this.dom.appendChild( (item.element = document.createElement("option")) );*/
-                break;
+        var select = document.createElement("select");
+        select.name = item.name;
+        var options = item.values.split(",");
+        var option;
+        for (j = 0; j < options.length; j++) {
+            option = document.createElement("option");
+            option.value = option.textContent = options[j];
+            select.appendChild(option);
         }
-	this.dom.appendChild(div);
+        div.appendChild( (item.element = select) );
+                /*this.dom.appendChild( (item.element = document.createElement("select")).append );
+          this.dom.appendChild( (item.element = document.createElement("option")) );*/
+                break;
+    }
+    this.dom.appendChild(div);
     }
     
-    /*var text = document.createElement("p");
-    text.textContent = "* Required";
-    this.dom.appendChild( (item.element = text) );*/
-    //var div = document.createElement("div");
-    /*div.classList.add('g-recaptcha');
-	    var sitekey = document.createAttribute("data-sitekey");
-	    sitekey.value = "6Le5S3kUAAAAALndozv5C6jmO6PX2IS81Xta03UZ";
-	    div.setAttributeNode(sitekey);*/
-    //div.id = "captcha";
-    //this.dom.appendChild(div);
-
     return this;
 
 };
@@ -478,466 +417,6 @@ window.Feedback.Form.prototype.data = function() {
     return ( this._data = data );
 };
 
-
-window.Feedback.Form.prototype.review = function( dom ) {
-
-    var i = 0, item, len = this.elements.length;
-
-    for (; i < len; i++) {
-        item = this.elements[ i ];
-
-        if (item.element.value.length > 0) {
-            dom.appendChild( element("label", item.name + ":") );
-            dom.appendChild( document.createTextNode( item.element.value.length ) );
-            dom.appendChild( document.createElement( "hr" ) );
-        }
-
-    }
-
-    return dom;
-
-};
-window.Feedback.Review = function() {
-
-    this.dom = document.createElement("div");
-    this.dom.className = "feedback-review";
-
-};
-
-window.Feedback.Review.prototype = new window.Feedback.Page();
-
-window.Feedback.Review.prototype.render = function( pages ) {
-
-    var i = 0, len = pages.length, item;
-    emptyElements( this.dom );
-
-    for (; i < len; i++) {
-
-        // get preview DOM items
-        pages[ i ].review( this.dom );
-
-    }
-
-    return this;
-
-};
-
-
-
-
-window.Feedback.Screenshot = function( options ) {
-    this.options = options || {};
-
-    this.options.blackoutClass = this.options.blackoutClass || 'feedback-blackedout';
-    this.options.highlightClass = this.options.highlightClass || 'feedback-highlighted';
-
-    this.h2cDone = false;
-};
-
-window.Feedback.Screenshot.prototype = new window.Feedback.Page();
-
-window.Feedback.Screenshot.prototype.end = function( modal ){
-    modal.className = modal.className.replace(/feedback\-animate\-toside/, "");
-
-    // remove event listeners
-    document.body.removeEventListener("mousemove", this.mouseMoveEvent, false);
-    document.body.removeEventListener("click", this.mouseClickEvent, false);
-
-    removeElements( [this.h2cCanvas] );
-
-    this.h2cDone = false;
-
-};
-
-window.Feedback.Screenshot.prototype.close = function(){
-    removeElements( [ this.blackoutBox, this.highlightContainer, this.highlightBox, this.highlightClose ] );
-
-    removeElements( document.getElementsByClassName( this.options.blackoutClass ) );
-    removeElements( document.getElementsByClassName( this.options.highlightClass ) );
-
-};
-
-window.Feedback.Screenshot.prototype.start = function( modal, modalHeader, modalFooter, nextButton ) {
-
-    if ( this.h2cDone ) {
-        emptyElements( this.dom );
-        nextButton.disabled = false;
-
-        var $this = this,
-        feedbackHighlightElement = "feedback-highlight-element",
-        dataExclude = "data-exclude";
-
-        var action = true;
-
-        // delegate mouse move event for body
-        this.mouseMoveEvent = function( e ) {
-
-            // set close button
-            if ( e.target !== previousElement && (e.target.className.indexOf( $this.options.blackoutClass ) !== -1 || e.target.className.indexOf( $this.options.highlightClass ) !== -1)) {
-
-                var left = (parseInt(e.target.style.left, 10) +  parseInt(e.target.style.width, 10));
-                left = Math.max( left, 10 );
-
-                left = Math.min( left, window.innerWidth - 15 );
-
-                var top = (parseInt(e.target.style.top, 10));
-                top = Math.max( top, 10 );
-
-                highlightClose.style.left = left + "px";
-                highlightClose.style.top = top + "px";
-                removeElement = e.target;
-                clearBox();
-                previousElement = undefined;
-                return;
-            }
-
-            // don't do anything if we are highlighting a close button or body tag
-            if (e.target.nodeName === "BODY" ||  e.target === highlightClose || e.target === modal || e.target === nextButton || e.target.parentNode === modal || e.target.parentNode === modalHeader) {
-                // we are not gonna blackout the whole page or the close item
-                clearBox();
-                previousElement = e.target;
-                return;
-            }
-
-            hideClose();
-
-            if (e.target !== previousElement ) {
-                previousElement = e.target;
-
-                window.clearTimeout( timer );
-
-                timer = window.setTimeout(function(){
-                    var bounds = getBounds( previousElement ),
-                    item;
-
-                    if ( action === false ) {
-                        item = blackoutBox;
-                    } else {
-                        item = highlightBox;
-                        item.width = bounds.width;
-                        item.height = bounds.height;
-                        ctx.drawImage($this.h2cCanvas, window.pageXOffset + bounds.left, window.pageYOffset + bounds.top, bounds.width, bounds.height, 0, 0, bounds.width, bounds.height );
-                    }
-
-                    // we are only targetting IE>=9, so window.pageYOffset works fine
-                    item.setAttribute(dataExclude, false);
-                    item.style.left = window.pageXOffset + bounds.left + "px";
-                    item.style.top = window.pageYOffset + bounds.top + "px";
-                    item.style.width = bounds.width + "px";
-                    item.style.height = bounds.height + "px";
-                }, 100);
-
-
-
-            }
-
-
-        };
-
-
-        // delegate event for body click
-        this.mouseClickEvent = function( e ){
-
-            e.preventDefault();
-
-
-            if ( action === false) {
-                if ( blackoutBox.getAttribute(dataExclude) === "false") {
-                    var blackout = document.createElement("div");
-                    blackout.className = $this.options.blackoutClass;
-                    blackout.style.left = blackoutBox.style.left;
-                    blackout.style.top = blackoutBox.style.top;
-                    blackout.style.width = blackoutBox.style.width;
-                    blackout.style.height = blackoutBox.style.height;
-
-                    document.body.appendChild( blackout );
-                    previousElement = undefined;
-                }
-            } else {
-                if ( highlightBox.getAttribute(dataExclude) === "false") {
-
-                    highlightBox.className += " " + $this.options.highlightClass;
-                    highlightBox.className = highlightBox.className.replace(/feedback\-highlight\-element/g,"");
-                    $this.highlightBox = highlightBox = document.createElement('canvas');
-
-                    ctx = highlightBox.getContext("2d");
-
-                    highlightBox.className += " " + feedbackHighlightElement;
-
-                    document.body.appendChild( highlightBox );
-                    clearBox();
-                    previousElement = undefined;
-                }
-            }
-
-
-
-        };
-
-        this.highlightClose = element("div", "X");
-        this.blackoutBox = document.createElement('div');
-        this.highlightBox = document.createElement( "canvas" );
-        this.highlightContainer = document.createElement('div');
-        var timer,
-        highlightClose = this.highlightClose,
-        highlightBox = this.highlightBox,
-        blackoutBox = this.blackoutBox,
-        highlightContainer = this.highlightContainer,
-        removeElement,
-        ctx = highlightBox.getContext("2d"),
-        buttonClickFunction = function( e ) {
-            e.preventDefault();
-
-            if (blackoutButton.className.indexOf("active") === -1) {
-                blackoutButton.className += " active";
-                highlightButton.className = highlightButton.className.replace(/active/g,"");
-            } else {
-                highlightButton.className += " active";
-                blackoutButton.className = blackoutButton.className.replace(/active/g,"");
-            }
-
-            action = !action;
-        },
-        clearBox = function() {
-
-            clearBoxEl(blackoutBox);
-            clearBoxEl(highlightBox);
-
-            window.clearTimeout( timer );
-        },
-        clearBoxEl = function( el ) {
-            el.style.left =  "-5px";
-            el.style.top =  "-5px";
-            el.style.width = "0px";
-            el.style.height = "0px";
-            el.setAttribute(dataExclude, true);
-        },
-        hideClose = function() {
-            highlightClose.style.left =  "-50px";
-            highlightClose.style.top =  "-50px";
-
-        },
-        blackoutButton = element("a", "Blackout"),
-        highlightButton = element("a", "Highlight"),
-        previousElement;
-
-
-        modal.className += ' feedback-animate-toside';
-
-
-        highlightClose.id = "feedback-highlight-close";
-
-
-        highlightClose.addEventListener("click", function(){
-            removeElement.parentNode.removeChild( removeElement );
-            hideClose();
-        }, false);
-
-        document.body.appendChild( highlightClose );
-
-
-        this.h2cCanvas.className = 'feedback-canvas';
-        document.body.appendChild( this.h2cCanvas);
-
-
-        var buttonItem = [ highlightButton, blackoutButton ];
-
-        this.dom.appendChild( element("p", "Highlight or blackout important information") );
-
-        // add highlight and blackout buttons
-        for (var i = 0; i < 2; i++ ) {
-            buttonItem[ i ].className = 'feedback-btn feedback-btn-small ' + (i === 0 ? 'active' : 'feedback-btn-inverse');
-
-            buttonItem[ i ].href = "#";
-            buttonItem[ i ].onclick = buttonClickFunction;
-
-            this.dom.appendChild( buttonItem[ i ] );
-
-            this.dom.appendChild( document.createTextNode(" ") );
-
-        }
-
-
-
-        highlightContainer.id = "feedback-highlight-container";
-        highlightContainer.style.width = this.h2cCanvas.width + "px";
-        highlightContainer.style.height = this.h2cCanvas.height + "px";
-
-        this.highlightBox.className += " " + feedbackHighlightElement;
-        this.blackoutBox.id = "feedback-blackout-element";
-        document.body.appendChild( this.highlightBox );
-        highlightContainer.appendChild( this.blackoutBox );
-
-        document.body.appendChild( highlightContainer );
-
-        // bind mouse delegate events
-        document.body.addEventListener("mousemove", this.mouseMoveEvent, false);
-        document.body.addEventListener("click", this.mouseClickEvent, false);
-
-    } else {
-        // still loading html2canvas
-        var args = arguments,
-        $this = this;
-
-        if ( nextButton.disabled !== true) {
-            this.dom.appendChild( loader() );
-        }
-
-        nextButton.disabled = true;
-
-        window.setTimeout(function(){
-            $this.start.apply( $this, args );
-        }, 500);
-    }
-
-};
-
-window.Feedback.Screenshot.prototype.render = function() {
-
-    this.dom = document.createElement("div");
-
-    // execute the html2canvas script
-    var script,
-    $this = this,
-    options = this.options,
-    runH2c = function(){
-        try {
-
-            options.onrendered = options.onrendered || function( canvas ) {
-                $this.h2cCanvas = canvas;
-                $this.h2cDone = true;
-            };
-
-            window.html2canvas([ document.body ], options);
-
-        } catch( e ) {
-
-            $this.h2cDone = true;
-            log("Error in html2canvas: " + e.message);
-        }
-    };
-
-    if ( window.html2canvas === undefined && script === undefined ) {
-
-        // let's load html2canvas library while user is writing message
-
-        script = document.createElement("script");
-        script.src = options.h2cPath || "libs/html2canvas.js";
-        script.onerror = function() {
-            log("Failed to load html2canvas library, check that the path is correctly defined");
-        };
-
-        script.onload = (scriptLoader)(script, function() {
-
-            if (window.html2canvas === undefined) {
-                log("Loaded html2canvas, but library not found");
-                return;
-            }
-
-            window.html2canvas.logging = window.Feedback.debug;
-            runH2c();
-
-
-        });
-
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(script, s);
-
-    } else {
-        // html2canvas already loaded, just run it then
-        runH2c();
-    }
-
-    return this;
-};
-
-window.Feedback.Screenshot.prototype.data = function() {
-
-    if ( this._data !== undefined ) {
-        return this._data;
-    }
-
-    if ( this.h2cCanvas !== undefined ) {
-
-        var ctx = this.h2cCanvas.getContext("2d"),
-        canvasCopy,
-        copyCtx,
-        radius = 5;
-        ctx.fillStyle = "#000";
-
-        // draw blackouts
-        Array.prototype.slice.call( document.getElementsByClassName('feedback-blackedout'), 0).forEach( function( item ) {
-            var bounds = getBounds( item );
-            ctx.fillRect( bounds.left, bounds.top, bounds.width, bounds.height );
-        });
-
-        // draw highlights
-        var items = Array.prototype.slice.call( document.getElementsByClassName('feedback-highlighted'), 0);
-
-        if (items.length > 0 ) {
-
-            // copy canvas
-            canvasCopy = document.createElement( "canvas" );
-            copyCtx = canvasCopy.getContext('2d');
-            canvasCopy.width = this.h2cCanvas.width;
-            canvasCopy.height = this.h2cCanvas.height;
-
-            copyCtx.drawImage( this.h2cCanvas, 0, 0 );
-
-            ctx.fillStyle = "#777";
-            ctx.globalAlpha = 0.5;
-            ctx.fillRect( 0, 0, this.h2cCanvas.width, this.h2cCanvas.height );
-
-            ctx.beginPath();
-
-            items.forEach( function( item ) {
-
-                var x = parseInt(item.style.left, 10),
-                y = parseInt(item.style.top, 10),
-                width = parseInt(item.style.width, 10),
-                height = parseInt(item.style.height, 10);
-
-                ctx.moveTo(x + radius, y);
-                ctx.lineTo(x + width - radius, y);
-                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-                ctx.lineTo(x + width, y + height - radius);
-                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-                ctx.lineTo(x + radius, y + height);
-                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-                ctx.lineTo(x, y + radius);
-                ctx.quadraticCurveTo(x, y, x + radius, y);
-
-            });
-            ctx.closePath();
-            ctx.clip();
-
-            ctx.globalAlpha = 1;
-
-            ctx.drawImage(canvasCopy, 0,0);
-
-        }
-
-        // to avoid security error break for tainted canvas
-        try {
-            // cache and return data
-            return ( this._data = this.h2cCanvas.toDataURL() );
-        } catch( e ) {}
-
-    }
-};
-
-
-window.Feedback.Screenshot.prototype.review = function( dom ) {
-
-    var data = this.data();
-    if ( data !== undefined ) {
-        var img = new Image();
-        img.src = data;
-        img.style.width = "300px";
-        dom.appendChild( img );
-    }
-
-};
 window.Feedback.XHR = function( url ) {
 
     this.xhr = new XMLHttpRequest();
@@ -954,15 +433,15 @@ window.Feedback.XHR.prototype.send = function( data, callback ) {
     xhr.onreadystatechange = function() {
         if( xhr.readyState == 4 ){
             callback( (xhr.status === 200) );
-        }
+    }
     };
 
     var emailData = '';
     emailData = 'subject=Feedback from ' + window.location.hostname;
     emailData += '&content=';
     for (var key in data[0]) {
-	emailData += key + ': ';
-	emailData += data[0][key] + '\n';
+    emailData += key + ': ';
+    emailData += data[0][key] + '\n';
     }
     emailData += '\nLocation: ' + window.location.href + '\n';
 

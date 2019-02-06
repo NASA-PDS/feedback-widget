@@ -255,6 +255,7 @@ window.Feedback = function( options ) {
 
     return returnMethods;
 };
+
 window.Feedback.Page = function() {};
 window.Feedback.Page.prototype = {
 
@@ -279,15 +280,6 @@ window.Feedback.Send.prototype = {
 
 window.Feedback.Form = function( elements ) {
 
-    /*
-    this.elements = elements || [{
-        type: "textarea",
-        name: "Issue",
-        label: "Please describe the issue you are experiencing",
-        required: false
-    }];
-    */
-
     this.elements = elements || [
       {
         type: "input",
@@ -305,26 +297,14 @@ window.Feedback.Form = function( elements ) {
         type: "select",
         name: "Type",
         label: "Type",
-    values: "Comment,Question,Problem/Bug,Kudos,Other",
+        values: "Comment,Question,Problem/Bug,Kudos,Other",
         required: false
       },
-      /*{
-        type: "input",
-        name: "Telephone",
-        label: "Telephone",
-        required: false
-      },
-      {
-        type: "input",
-        name: "Topic",
-        label: "Topic",
-        required: true
-    },*/
       {
         type: "textarea",
         name: "Comment",
         label: "Comment",
-        required: false
+        required: true
       }
     ];
 
@@ -341,39 +321,36 @@ window.Feedback.Form.prototype.render = function() {
     emptyElements( this.dom );
     for (; i < len; i++) {
         item = this.elements[ i ];
-    var div = document.createElement("div");
-    div.classList.add("feedback-input");
+        var div = document.createElement("div");
+        div.classList.add("feedback-input");
         switch( item.type ) {
             case "textarea":
                 div.appendChild( element("label", item.label + ":" + (( item.required === true ) ? " *" : "")) );
-        var textarea = document.createElement("textarea");
-        textarea.name = item.name;
+                var textarea = document.createElement("textarea");
+                textarea.name = item.name;
                 div.appendChild( ( item.element = textarea ) );
-        /*this.dom.appendChild(textarea);*/
                 break;
             case "input":
                 div.appendChild( element("label", item.label + ": " + (( item.required === true) ? "*" : "")) );
-        var input = document.createElement("input");
-        input.name = item.name;
+                var input = document.createElement("input");
+                input.name = item.name;
                 div.appendChild( (item.element = input) );
                 break;
             case "select":
                 div.appendChild( element("label", item.label + ": " + (( item.required === true) ? "*" : "")) );
-        var select = document.createElement("select");
-        select.name = item.name;
-        var options = item.values.split(",");
-        var option;
-        for (j = 0; j < options.length; j++) {
-            option = document.createElement("option");
-            option.value = option.textContent = options[j];
-            select.appendChild(option);
-        }
-        div.appendChild( (item.element = select) );
-                /*this.dom.appendChild( (item.element = document.createElement("select")).append );
-          this.dom.appendChild( (item.element = document.createElement("option")) );*/
+                var select = document.createElement("select");
+                select.name = item.name;
+                var options = item.values.split(",");
+                var option;
+                for (j = 0; j < options.length; j++) {
+                    option = document.createElement("option");
+                    option.value = option.textContent = options[j];
+                    select.appendChild(option);
+                }
+                div.appendChild( (item.element = select) );
                 break;
-    }
-    this.dom.appendChild(div);
+        }
+        this.dom.appendChild(div);
     }
     
     return this;
@@ -431,26 +408,22 @@ window.Feedback.XHR.prototype.send = function( data, callback ) {
     var xhr = this.xhr;
 
     xhr.onreadystatechange = function() {
-        if( xhr.readyState == 4 ){
+        if( xhr.readyState == 4 ) {
             callback( (xhr.status === 200) );
-    }
+        }
     };
 
     var emailData = '';
     emailData = 'subject=Feedback from ' + window.location.hostname;
     emailData += '&content=';
     for (var key in data[0]) {
-    emailData += key + ': ';
-    emailData += data[0][key] + '\n';
+        emailData += key + ': ';
+        emailData += data[0][key] + '\n';
     }
     emailData += '\nLocation: ' + window.location.href + '\n';
 
     xhr.open( "POST", this.url, true);
     xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-    /*xhr.setRequestHeader("Content-type", "application/json");*/
-    /*xhr.send( "data=" + encodeURIComponent( window.JSON.stringify( emailData ) ) );*/
-    /*xhr.send( window.JSON.stringify( emailData ) );*/
-
     xhr.send(emailData);
 };
 })( window, document );

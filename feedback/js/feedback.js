@@ -73,9 +73,9 @@ scriptLoader = function( script, func ){
 },
 sendButton,
 H2C_IGNORE = "data-html2canvas-ignore",
-HOST = "https://pds-gamma.jpl.nasa.gov/",
-captchaUrl = "feedback/recaptcha-v3-verify.php",
-feedbackUrl = "email-service/EmailSendingServlet",
+HOST = "https://pds-gamma.jpl.nasa.gov",
+captchaUrl = "/feedback/recaptcha-v3-verify.php",
+feedbackUrl = "/email-service/EmailSendingServlet",
 modal = document.createElement("div"),
 modalBody = document.createElement("div"),
 modalHeader = document.createElement("div"),
@@ -176,6 +176,13 @@ window.Feedback = function( options ) {
                 throw new Error( "Adapter is not an instance of Feedback.Send" );
             }
 
+            // fetch data from all pages
+            //for (var i = 0, len = options.pages.length, data = [], p = 0, tmp; i < len; i++) {
+            //    if ( (tmp = options.pages[ i ].data()) !== false ) {
+            //        data[ p++ ] = tmp;
+            //    }
+            //}
+	    data = options.page.data()
             emptyElements( modalBody );
             modalBody.appendChild( loader() );
 
@@ -211,7 +218,7 @@ window.Feedback = function( options ) {
                 url: HOST + captchaUrl,
                 data: { response: response },
                 success: function( data ) {
-                    console.log(data);
+			//console.log(data);
                     captchaScore = parseFloat(data.substring(data.indexOf("float") + 6, data.indexOf("float") + 9));
                     if (captchaScore > 0.70) {
                         options.url = options.url || HOST + feedbackUrl;
@@ -239,7 +246,7 @@ window.Feedback = function( options ) {
 
     var button = document.createElement("button");
     var img = document.createElement("img");
-    img.src = HOST + 'feedback/image/msg_icon.png';
+    img.src = HOST + '/feedback/image/msg_icon.png';
     img.height = '15';
     button.appendChild(img)
     button.appendChild(document.createTextNode('  ' + options.label));
@@ -283,18 +290,21 @@ window.Feedback.Form = function( elements ) {
     this.elements = elements || [
       {
         type: "input",
+	id: "feedback-name",
         name: "Name",
         label: "Name",
         required: false
       },
       {
         type: "input",
+	id: "feedback-email",
         name: "Email",
         label: "Email",
         required: false
       },
       {
         type: "select",
+	id: "feedback-type",
         name: "Type",
         label: "Type",
         values: "Comment,Question,Problem/Bug,Kudos,Other",
@@ -302,6 +312,7 @@ window.Feedback.Form = function( elements ) {
       },
       {
         type: "textarea",
+	id: "feedback-comment",
         name: "Comment",
         label: "Comment",
         required: true
@@ -328,18 +339,21 @@ window.Feedback.Form.prototype.render = function() {
                 div.appendChild( element("label", item.label + ":" + (( item.required === true ) ? " *" : "")) );
                 var textarea = document.createElement("textarea");
                 textarea.name = item.name;
+                textarea.id = item.id;
                 div.appendChild( ( item.element = textarea ) );
                 break;
             case "input":
                 div.appendChild( element("label", item.label + ": " + (( item.required === true) ? "*" : "")) );
                 var input = document.createElement("input");
                 input.name = item.name;
+                input.id = item.id;
                 div.appendChild( (item.element = input) );
                 break;
             case "select":
                 div.appendChild( element("label", item.label + ": " + (( item.required === true) ? "*" : "")) );
                 var select = document.createElement("select");
                 select.name = item.name;
+                select.id = item.id;
                 var options = item.values.split(",");
                 var option;
                 for (j = 0; j < options.length; j++) {
@@ -416,10 +430,12 @@ window.Feedback.XHR.prototype.send = function( data, callback ) {
     var emailData = '';
     emailData = 'subject=Feedback from ' + window.location.hostname;
     emailData += '&content=';
-    for (var key in data[0]) {
+
+    for (var key in data) {
         emailData += key + ': ';
-        emailData += data[0][key] + '\n';
+        emailData += data[key] + '\n';
     }
+
     emailData += '\nLocation: ' + window.location.href + '\n';
 
     xhr.open( "POST", this.url, true);

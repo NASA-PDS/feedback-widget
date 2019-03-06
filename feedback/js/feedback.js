@@ -72,7 +72,6 @@ scriptLoader = function( script, func ){
 
 },
 sendButton,
-H2C_IGNORE = "data-html2canvas-ignore",
 HOST = "https://pds-gamma.jpl.nasa.gov",
 captchaUrl = "/feedback/recaptcha-v3-verify.php",
 feedbackUrl = "/email-service/EmailSendingServlet",
@@ -101,7 +100,6 @@ window.Feedback = function( options ) {
 
         // open send feedback modal window
         open: function() {
-    
             options.page.render();  
             document.body.appendChild( glass );
             button.disabled = true;
@@ -141,7 +139,6 @@ window.Feedback = function( options ) {
 
             modal.setAttribute("id", "feedback-form");
             modal.className = "feedback-modal";
-            modal.setAttribute(H2C_IGNORE, true); // don't render in html2canvas
             
             modal.appendChild( modalHeader );
             modal.appendChild( modalBody );
@@ -215,7 +212,7 @@ window.Feedback = function( options ) {
         captchaCallback: function( response ) { 
             $.ajax({
                 type: "POST",
-                url: HOST + captchaUrl,
+                url: captchaUrl,
                 data: { response: response },
                 success: function( data ) {
 			//console.log(data);
@@ -239,20 +236,16 @@ window.Feedback = function( options ) {
     window.captchaCallback = returnMethods.captchaCallback;
 
     glass.className = "feedback-glass";
-    //glass.style.pointerEvents = "none";
-    glass.setAttribute(H2C_IGNORE, true);
 
     options = options || {};
 
     var button = document.createElement("button");
     var img = document.createElement("img");
-    img.src = HOST + '/feedback/image/msg_icon.png';
+    img.src = '/feedback/image/msg_icon.png';
     img.height = '15';
     button.appendChild(img)
     button.appendChild(document.createTextNode('  ' + options.label));
     button.className = "feedbackTab";
-
-    button.setAttribute(H2C_IGNORE, true);
 
     button.onclick = returnMethods.open;
 
@@ -318,7 +311,6 @@ window.Feedback.Form = function( elements ) {
         required: true
       }
     ];
-
     this.dom = document.createElement("div");
     this.dom.className = "feedback-form-container";
 
@@ -391,12 +383,6 @@ window.Feedback.Form.prototype.end = function() {
 };
 
 window.Feedback.Form.prototype.data = function() {
-
-    if ( this._data !== undefined ) {
-        // return cached value
-        return this._data;
-    }
-
     var i = 0, len = this.elements.length, item, data = {};
 
     for (; i < len; i++) {

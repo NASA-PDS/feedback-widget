@@ -36,14 +36,17 @@
 # Script to deploy applications to web server
 #
 
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 if [ -n "${1}" ] && [ -d "${1}" ]; then
     webhome=${1}
-elif [ -z "${WEB_HOME}" ]; then
-    echo "ERROR: WEB_HOME environment variable is not set." 1>&2
-    echo "       And not submitted as an argument." 1>&2
+elif [ -z "${APACHE_HOME}" ]; then
+    echo "ERROR: Path to Web Server directory containing website must be specified." 1>&2
+    echo 1>&2
+    echo "Usage: $(basename $0) <path/to/www/>" 1>&2
+    echo
     exit 1
 fi
 
-rsync -av feedback $webhome/
+rsync -av ${DIR}/feedback $webhome/
 
 exit 0

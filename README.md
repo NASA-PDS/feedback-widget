@@ -28,7 +28,7 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 </script>
 ```
 
-3. Download the Feedback Widget tar (link) or zip (link), and unpack.
+3. Download the Feedback Widget tar or zip from [Github](https://github.jpl.nasa.gov/PDSEN/feedback-widget/releases/latest), and unpack.
 
 4. Once you unpack the widget, you will want to move the files to the home directory for your website, or *WEB_HOME_PATH*. This *WEB_HOME_PATH* is the path where your homepage resides. For example, if your homepage is `/my/website/index.html`, then your *WEB_HOME_PATH* is `/my/website/`. To move the files, from the command-line:
 

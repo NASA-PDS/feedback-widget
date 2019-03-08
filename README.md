@@ -10,22 +10,20 @@ Before being able to use this widget, you will need to register your hostname wi
 Email pds_operator@jpl.nasa.gov with the hostname(s) for your website.
 
 
-## Deploy 
-
-### Apache Web Server
+## Install
 
 Here are the steps for deploying the Feedback widget to your website on an Apache Web Server:
 
+>> NOTE: These installation instructions assume the use of an Apache Web Server. The Feedback widget can be installed on other web servers, but the exact steps may differ depending upon the software and configuration.
+
+
 1. Add the following code snippet between the `<head>` tag on each page of your website. If your website uses a header file, you can place it in there:
 ```
-<script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
+<!-- PDS Feedback Widget -->
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
+<script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 <script src="/feedback/js/feedback.js"></script>
-<script type="text/javascript">
-  document.addEventListener("DOMContentLoaded", function(){
-    Feedback();
-  });
-</script>
+<!-- -->
 ```
 
 3. Download the Feedback Widget tar or zip from [Github](https://github.jpl.nasa.gov/PDSEN/feedback-widget/releases/latest) to your local machine, then copy to your home directory on the machine hosting the website.
@@ -41,30 +39,47 @@ unzip <.zip>
 
 5. Now we want to move the files needed for the widget to the home directory for your website, or *WEB_HOME_PATH*. This *WEB_HOME_PATH* is the path where your homepage resides. For example, if your homepage is `/my/website/index.html`, then your *WEB_HOME_PATH* is `/my/website/`. To move the files, from the command-line:
 
-   * *On Mac / Linux Machine*
-   ```
-   # Make sure you are in the the feedback widget
-   $ pwd
-   /path/to/feedback-widget
+   * *macOS / Linux*
+     ```
+     # Make sure you are in the the feedback widget
+     $ pwd
+     /path/to/feedback-widget
 
-   # Run deploy.sh to push the files to WEB_HOME_PATH
-   $ ./deploy.sh /my/website
-   sending incremental file list
-   feedback/
-   feedback/recaptcha-v3-verify.php
-   feedback/css/
-   feedback/css/feedback.css
-   feedback/image/
-   feedback/image/msg_icon.png
-   feedback/js/
-   feedback/js/feedback.js   
-   ```
+     # Run deploy.sh to push the files to WEB_HOME_PATH
+     $ ./deploy.sh /my/website
+     sending incremental file list
+     feedback/
+     feedback/recaptcha-v3-verify.php
+     feedback/css/
+     feedback/css/feedback.css
+     feedback/image/
+     feedback/image/msg_icon.png
+     feedback/js/
+     feedback/js/feedback.js   
+     ```
 
    * *Windows*
-   TBD
+     TBD
 
-## Contributing
-TBD
+## Uninstall
+
+The following steps will help you uninstall the feedback widget:
+
+1. Remove the following code snippet from any web pages it was added to:
+
+```
+<!-- PDS Feedback Widget -->
+<link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
+<script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
+<script src="/feedback/js/feedback.js"></script>
+<!-- -->
+```
+
+2. Remove the files from *WEB_HOME_PATH/feedback*:
+```
+# Unix example
+rm -fr /my/website/feedback
+```
 
 ## License
 [LICENSE.txt](LICENSE.txt)

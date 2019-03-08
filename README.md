@@ -16,7 +16,7 @@ Email pds_operator@jpl.nasa.gov with the hostname(s) for your website.
 
 Here are the steps for deploying the Feedback widget to your website on an Apache Web Server:
 
-1. Add the following code snippet between the `<head>` tag on each page of your website (or in a website header file, if it exists):
+1. Add the following code snippet between the `<head>` tag on each page of your website. If your website uses a header file, you can place it in there:
 ```
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />

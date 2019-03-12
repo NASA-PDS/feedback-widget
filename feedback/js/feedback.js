@@ -78,7 +78,7 @@ scriptLoader = function( script, func ){
 sendButton,
 HOST = "https://pds-gamma.jpl.nasa.gov",
 captchaUrl = "/feedback/recaptcha-v3-verify.php",
-feedbackUrl = "/email-service/EmailSendingServlet",
+feedbackUrl = "/email-service/SubmitFeedback",
 modal = document.createElement("div"),
 modalBody = document.createElement("div"),
 modalHeader = document.createElement("div"),

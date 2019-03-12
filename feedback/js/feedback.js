@@ -5,6 +5,10 @@
 
  Released under MIT License
 */
+document.addEventListener("DOMContentLoaded", function(){
+	Feedback();
+});
+
 (function( window, document, undefined ) {
 if ( window.Feedback !== undefined ) {
     return;
@@ -145,7 +149,7 @@ window.Feedback = function( options ) {
             modal.appendChild( modalFooter );
             
             document.body.appendChild( modal );
-        
+
             window.grecaptcha.render("recaptcha", {sitekey: "6LfLCIgUAAAAAI3xLW5PQijxDyZcaUUlTyPDfYlZ"});
         },
 
@@ -167,7 +171,6 @@ window.Feedback = function( options ) {
 
         // send data
         send: function( adapter ) {
-
             // make sure send adapter is of right prototype
             if ( !(adapter instanceof window.Feedback.Send) ) {
                 throw new Error( "Adapter is not an instance of Feedback.Send" );
@@ -179,13 +182,12 @@ window.Feedback = function( options ) {
             //        data[ p++ ] = tmp;
             //    }
             //}
-	    data = options.page.data()
+	    data = options.page.data();
             emptyElements( modalBody );
             modalBody.appendChild( loader() );
 
             // send data to adapter for processing
             adapter.send( data, function( success ) {
-
                 emptyElements( modalBody );
                 sendButton.disabled = false;
 
@@ -209,26 +211,26 @@ window.Feedback = function( options ) {
 
         },
 
-        captchaCallback: function( response ) { 
+        captchaCallback: function( response ) {
             $.ajax({
                 type: "POST",
                 url: captchaUrl,
                 data: { response: response },
                 success: function( data ) {
-			//console.log(data);
                     captchaScore = parseFloat(data.substring(data.indexOf("float") + 6, data.indexOf("float") + 9));
                     if (captchaScore > 0.70) {
                         options.url = options.url || HOST + feedbackUrl;
                         options.adapter = options.adapter || new window.Feedback.XHR( options.url );
                         emptyElements( modalBody );
                         returnMethods.send( options.adapter );
-                    }    
+                    }
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+		    alert("Status: " + textStatus);
+		    alert("Error: " + errorThrown); 
                 }
             });
-           window.grecaptcha.reset();
+	    window.grecaptcha.reset();
        }
     
     };
@@ -273,7 +275,6 @@ window.Feedback.Page.prototype = {
 };
 window.Feedback.Send = function() {};
 window.Feedback.Send.prototype = {
-
     send: function() {}
 
 };

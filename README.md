@@ -20,6 +20,8 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 1. Add the following code snippet between the `<head>` tag on each page of your website. If your website uses a header file, you can place it in there:
 ```
 <!-- PDS Feedback Widget -->
+<!-- Only add JQuery if you do not already include a library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 <script src="/feedback/js/feedback.js"></script>
@@ -69,6 +71,8 @@ The following steps will help you uninstall the feedback widget:
 
 ```
 <!-- PDS Feedback Widget -->
+<!-- Only add JQuery if you do not already include a librar -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 <script src="/feedback/js/feedback.js"></script>

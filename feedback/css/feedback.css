@@ -1,12 +1,9 @@
 /*
     Copyright (c) 2019, California Institute of Technology ("Caltech").  
     U.S. Government sponsorship acknowledged.
-
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright notice,
       this list of conditions and the following disclaimer.
     * Redistributions must reproduce the above copyright notice, this list of
@@ -16,7 +13,6 @@
       Laboratory, nor the names of its contributors may be used to endorse or
       promote products derived from this software without specific prior written
       permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
     AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
     IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -592,8 +588,8 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
 .feedbackTab {
   display: block;
   position: fixed;
-  background: #18ad1c;
-  /*background: #006699;*/
+/*  background: #18ad1c; */
+  background: #0b3d91;
   color: #ffffff;
   border: 1px solid transparent;
   font-size: 15px;
@@ -603,26 +599,24 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
   z-index: 2;
   cursor: pointer;
   text-decoration: none;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform: rotate(-90deg);
-  -ms-transform: rotate(-90deg) scale(1.02);
   -webkit-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
-  transition: all .5s ease;
+  -ms-transform: rotate(-90deg) scale(1.02);
+  transform: rotate(-90deg);
+
+    -webkit-transition: all .5s ease;
   -moz-transition: all .5s ease;
-  -webkit-transition: all .5s ease;
   -o-transition: all .5s ease;
+  transition: all .5s ease;
 
   right: -8px;
   top: 33%;
   padding: 5px 14px 14px 14px;
   border-bottom: 0px;
-  color: white;
 
-  transform-origin: 100% 100% 0;
   -webkit-transform-origin: 100% 100% 0;
   -ms-transform-origin: 100% 100% 0;
+  transform-origin: 100% 100% 0;
 
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
@@ -636,9 +630,10 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
 }
 
 .feedbackTab:hover, .feedbackTab:focus, .feedbackTab:active {
-    -ms-ransform: rotate(-90deg) scale(1.02) translateY(-5px);
     -webkit-transform: rotate(-90deg) translateY(-5px);
     -moz-transform: rotate(-90deg) translateY(-5px);
+    -ms-transform: rotate(-90deg) scale(1.02) translateY(-5px);
+    transform: rotate(-90deg) translateY(-5px);
     /*background: #18ad1c;*/
 }
 
@@ -658,4 +653,17 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
     margin-top: 0;
     margin-bottom: 0;
     font-size: 0.75em;
+}
+
+.feedback-body.confirmation {
+    text-align: center;
+}
+
+.feedback-body.confirmation p {
+    margin: 0;
+}
+
+.feedback-body.confirmation p a,
+.feedback-body.confirmation p a:hover {
+    color: #0000cc;
 }

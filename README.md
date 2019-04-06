@@ -25,6 +25,7 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 <script src="/feedback/js/feedback.js"></script>
+<script src="/feedback/js/config.js"></script>
 <!-- -->
 ```
 
@@ -76,6 +77,7 @@ The following steps will help you uninstall the feedback widget:
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 <script src="/feedback/js/feedback.js"></script>
+<script src="/feedback/js/config.js"></script>
 <!-- -->
 ```
 

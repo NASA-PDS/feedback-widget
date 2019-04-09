@@ -23,9 +23,9 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 <!-- Only add JQuery if you do not already include a library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
+<script src="/feedback/js/config.js"></script>
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 <script src="/feedback/js/feedback.js"></script>
-<script src="/feedback/js/config.js"></script>
 <!-- -->
 ```
 
@@ -58,11 +58,57 @@ unzip <.zip>
      feedback/image/
      feedback/image/msg_icon.png
      feedback/js/
+     feedback/js/config.js
      feedback/js/feedback.js   
      ```
 
    * *Windows*
      TBD
+
+## [Configurable Variables](#configuring-feedback)
+
+You **must** provide the base URL of your website in `/path/to/feedback/js/config.js` for the key 'host'. While you're there, we've also provided various options to customize your Feedback widget. Refer to the following table for a list of descriptions and acceptable values.
+
+Variable        | Description                                        | Default Value                 | Accepted Values or Types<sup>[0](#zero)</sup>
+--------------- | -------------------------------------------------- | ----------------------------- | ---------------
+host*           | The base URL of your website.                      | -                             | 
+captchaScore    | The minimum score required to submit Feedback.     | "75"                          | integer<sup>[5](#fifth); [0, 100)
+sentStatusMsg   | Message for user that his or her Feedback was sent.| "Thank you for your feedback."| text
+sentFollowupMsg | Message for user regarding followup.               | "If you provided an email address, a representative will get back to you as soon as possible." | text
+errorStatusMsg  | Message for user that his or her Feedback was not sent. | "There was an error sending your feedback." | text
+errorFollowupMsg| Message for user with alternate way to reach the PDS operator.| "If the problem persists, please email " | text<sup>[1](#first)</sup>
+feedbackType    | Types of feedback.              | "Comment,Question,Problem/Bug,Kudos,Other" | text<sup>[2](#second)</sup>
+|               |                                                    |                         |											       |
+color           | The color of the Feedback tab.                     | #0b3d91 (NASA blue)     | text<sup>[3](#third)</sup>
+fontColor       | The color of the text on the Feedback tab.         | #ffffff (white)         | text<sup>[3](#third)</sup>
+placement       |                                                    | n/a                     | n/a
+&emsp;side      | The side of screen to attach the Feedback tab.     | right                   | RIGHT, LEFT, TOP, BOTTOM
+&emsp;offset    | The offset from top or left side of the screen.<sup>[4](#fourth)</sup>| 50vh | integer<sup>[5](#fifth)</sup>; [0, 95)
+size            |                                                    |                         | n/a
+&emsp;width     | The width of the Feedback tab.                     | 115px                   | integer<sup>[5](#fifth)</sup>
+&emsp;height    | The height of the Feedback tab.                    |  40px                   | integer<sup>[5](#fifth)</sup>
+
+<a name="zero"></a>0: All values must be enclosed within the existing double quotation marks.<br>
+<a name="first"></a>1: Do **not** include an email address here and leave a space at the end of the incomplete phrase as shown in the default value. Note that the email address for the PDS operator will be inserted at the end, so structure the sentence accordingly.<br>
+<a name="second"></a>2: If there are multiple values, separate them with a comma and **no** spaces.<br>
+<a name="third"></a>3: Must be written as a hexadecimal, RGB, or HSL color, or from [this list](https://www.w3schools.com/colors/colors_names.asp) of accepted color names. If you are unfamiliar with these formats or looking for a color, [ColorHexa](https://www.colorhexa.com) is a helpful resource to find the exact color you want in all the accepted formats. Be sure to include '#', 'rgb(..., ..., ...)', or 'hsl(..., ..., ...)' as needed.<br>
+<a name="fourth"></a>4: Depending on the side of screen specified, this places the vertical center of the tab proportional to the length of the screen or the left corner of the tab proportional to the width of the screen. For instance, if you fill in config.js as follows:
+  ```
+    placement: {
+      side: "bottom",
+      offset: "0"
+    }
+  ```
+  the Feedback tab will be on the bottom of the screen square in the left corner.
+  ```
+    placement: {
+      side: "left",
+      offset: "25"
+    }
+  ```
+  places the Feedback tab on the left side of the screen a quarter of the way down from the top.<br>
+<a name="fifth"></a>5: Enter the integer value only. Do not include such characters as '%', 'vh', 'vw', or 'px'.<br>
+
 
 ## Uninstall
 
@@ -75,9 +121,9 @@ The following steps will help you uninstall the feedback widget:
 <!-- Only add JQuery if you do not already include a librar -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
+<script src="/feedback/js/config.js"></script>
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
 <script src="/feedback/js/feedback.js"></script>
-<script src="/feedback/js/config.js"></script>
 <!-- -->
 ```
 

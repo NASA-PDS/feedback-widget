@@ -41,8 +41,8 @@ unzip <.zip>
 ```
 
 5. Next, configure the Feedback Widget . From the root folder of the widget, open `feedback/js/config.js` in your text editor of choice.<br><br>
-There is only one required field - '**host**' - where you must provide the base URL of your website, e.g. `https://pds-imaging.jpl.nasa.gov`. (Do not leave a trailing backslash like so: `https://pds.nasa.gov/`.)<br><br>
-A list and explanation of optional configurable variables can be found in the [following section](#configurable-variables).
+There is a required field - '**host**' - where you must provide the base URL of your website, e.g. `https://pds-imaging.jpl.nasa.gov`. (Do not leave a trailing backslash like so: `https://pds.nasa.gov/`.)<br><br>
+A list and explanation of optional configurable variables can be found in the [following section](#configurable-variables). It is highly recommended that you update **followupLinks** to provide help information unique to your website.
 
 6. Now we want to move the files needed for the widget to the home directory for your website, or *WEB_HOME_PATH*. This *WEB_HOME_PATH* is the path where your homepage resides. For example, if your homepage is `/my/website/index.html`, then your *WEB_HOME_PATH* is `/my/website/`. To move the files, from the command-line:
 
@@ -73,8 +73,8 @@ A list and explanation of optional configurable variables can be found in the [f
 
 Variable        | Description                                  | Default Value | Accepted Values or Types<sup>[0](#zero)</sup>
 --------------- | -------------------------------------------------- | ----------------------------- | --------------------
-host*           | The base URL of your website.                      | -                             | 
-|               |                                                    |                               |                       |
+host*           | The base URL of your website.                      | -                             | valid URL
+|               |                                                    |                               |                     |
 header          | The header or title in the Feedback pane.          | "Help Desk"                   | text
 text            | An introductory sentence or two afer the header.   | "How can we help you? Send us your question or feedback and we will get back to you within the next 24 hours." | text
 feedbackType    | Types of feedback.              | "Comment,Question,Problem/Bug,Kudos,Other" | text<sup>[2](#second)</sup>
@@ -82,8 +82,8 @@ sentStatus      | Message for user that his or her Feedback was sent.| "Thank yo
 sentFollowup    | Message for user regarding followup.               | "If you provided an email address, a representative will get back to you as soon as possible." | text
 errorStatus     | Message for user that his or her Feedback was not sent. | "There was an error sending your feedback." | text
 errorFollowup   | Message for user with alternate way to reach the PDS operator.| "If the problem persists, please email " | text<sup>[1](#first)</sup>
-followupGeneral | Message that appears with both sent or error message.| ""                          | text
-followupLinks   | Links that are listed at the end of followupGeneral. | ""                          | valid URLs<sup>[2](#second)</sup>
+followupGeneral | Message that appears with both sent or error message.| "In the meantime, you may find the following links helpful:" | text
+followupLinks   | Links that are listed at the end of followupGeneral. | "https://pds.nasa.gov/site-help.shtml,<br>https://pds.nasa.gov/home/users/,<br>https://pds.nasa.gov/home/proposers/,<br>https://pds.nasa.gov/home/providers/" | valid URLs<sup>[2](#second)</sup>
 |               |                                                    |                         |											       |
 label           | The text on the Feedback tab.                      | "Need Help?"            | text
 color           | The color of the Feedback tab.                     | "#0b3d91" (NASA blue)   | text<sup>[3](#third)</sup>

@@ -592,7 +592,6 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
   background: #0b3d91;
   color: #ffffff;
   border: 1px solid transparent;
-  font-size: 15px;
   font-family: Arial;
   line-height: 20px;
   opacity: 1;
@@ -617,12 +616,15 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
   -webkit-transform-origin: 100% 100% 0;
   -ms-transform-origin: 100% 100% 0;
   transform-origin: 100% 100% 0;
-
+  
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   border-radius: 4px;
+  height: 60px;
+  width: 150px;
+  font-size: 16px;
 }
 
 .feedbackTab img {
@@ -659,8 +661,8 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
     text-align: center;
 }
 
-.feedback-body.confirmation p {
-    margin: 0;
+.feedback-body.confirmation p:last-child {
+    margin-bottom: 0;
 }
 
 .feedback-body.confirmation p a,

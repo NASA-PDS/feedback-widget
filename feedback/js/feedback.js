@@ -27,7 +27,7 @@
 */
 
 document.addEventListener("DOMContentLoaded", function(){
-	Feedback();
+	Feedback(config);
 });
 
 (function( window, document, undefined ) {
@@ -113,12 +113,22 @@ document.addEventListener("DOMContentLoaded", function(){
 		options = options || {};
 
 		// default properties
-		options.label = options.label || "Feedback";
-		options.header = options.header || "Your Feedback";
+		options.tab.label = options.tab.label || "Need Help?";
+		options.tab.color = options.tab.color || "#0b3d91";
+		options.tab.fontColor = options.tab.fontColor || "white";
+		options.tab.fontSize = options.tab.fontSize || "15px";
+		options.tab.size.width = options.tab.size.width || "170px";
+		options.tab.size.height = options.tab.size.height || "60px";
+
+		options.feedback.header = options.feedback.header || "Help Desk";
+		options.feedback.text = options.feedback.text || "How can we help you? Send us your question or feedback and we will get back to you within the next 24 hours."
 		options.statusSuccess = options.statusSuccess || "Thank you for making the PDS a better site."
 		options.statusError = options.statusError || "There was an error sending your feedback."
 		options.followupSuccess = options.followupSuccess || "If you provided an email address, a PDS representative will get back to you as soon as possible."
 		options.followupError = options.followupError || "If the problem persists, please email ";
+		options.feedback.followupGeneral = options.feedback.followupGeneral || "In the meantime, you may find the following links helpful:";
+        options.feedback.followupLinks = options.feedback.followupLinks || "https://pds.nasa.gov/site-help.shtml,https://pds.nasa.gov/home/users/,https://pds.nasa.gov/home/proposers/,https://pds.nasa.gov/home/providers/";
+        
 		options.page = options.page || new window.Feedback.Form();
 
 		var button,
@@ -139,12 +149,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
 				// build header element
 				modalHeader.appendChild( a );
-				modalHeader.appendChild( element("h3", options.header ) );
+				modalHeader.appendChild( element("h3", options.feedback.header ) );
 				modalHeader.className =  "feedback-header";
 
 				modalBody.className = "feedback-body";
 
 				emptyElements( modalBody );
+				modalBody.appendChild( element("p", options.feedback.text) );
 				modalBody.appendChild( options.page.dom );
 
 				// Send button
@@ -227,6 +238,20 @@ document.addEventListener("DOMContentLoaded", function(){
 						message.innerHTML = options.statusError + "<br/>" + options.followupError + "<a href='mailto:pds_operator@jpl.nasa.gov'>pds_operator@jpl.nasa.gov</a>.";
 					}
 					modalBody.appendChild( message );
+
+					var followupGeneral = options.feedback.followupGeneral;
+					var followupLinks = options.feedback.followupLinks;
+					if ( followupGeneral !== "" ) {
+						var followup = document.createElement("p");
+						followup.innerHTML = followupGeneral;
+						if ( followupLinks !== "" ) {
+							var links = followupLinks.split(",");
+							for ( var i = 0; i < links.length; i++ ) {
+								followup.insertAdjacentHTML("beforeend", "<br><a href=\"" + links[i] + "\">" + links[i] + "</a>");
+							}
+						}
+						modalBody.appendChild( followup );
+					}
 				});
 
 			},
@@ -269,30 +294,36 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		glass.className = "feedback-glass";
 
-		options = options || {};
+		// options = options || {};
 
 		var button = document.createElement("button");
-		var img = document.createElement("img");
-		img.src = '/feedback/image/msg_icon.png';
-		img.height = '15';
-		button.appendChild(img)
-		button.appendChild(document.createTextNode('  ' + options.label));
-		button.style.background = config.tab.color;
-		button.style.color = config.tab.fontColor;
-		var width = config.tab.size.width;
-		var height = config.tab.size.height;
-		if ( width.endsWith("px") ) {
-			button.style.width = width;
-		} else if ( width !== "" ) {
+		button.style.background = options.tab.color;
+		button.style.color = options.tab.fontColor;
+		var fontSize = options.tab.fontSize;
+		if ( fontSize !== "15px" ) { // if not default
+			if ( !isNaN(Number(fontSize)) ) {
+				button.style.fontSize = options.tab.fontSize + "px";
+				button.appendChild(document.createTextNode(options.tab.label));
+			} else {
+				console.log("Invalid value for font size. Please check the configuration file.");
+			}
+		} else {
+			var img = document.createElement("img");
+			img.src = '/feedback/image/msg_icon.png';
+			img.height = '15';
+			button.appendChild(img)
+			button.appendChild(document.createTextNode('  ' + options.tab.label));
+		}
+		var width = options.tab.size.width;
+		var height = options.tab.size.height;
+		if ( width !== "150px" ) {
 			if ( !isNaN(Number(width)) ) {
 				button.style.width = width + "px";
 			} else {
 				console.log("Invalid value for tab width. Please check the configuration file.");
 			}
 		}
-		if ( height.endsWith("px") ) {
-			button.style.height = height;
-		} else if ( height !== "" ) {
+		if ( height !== "60px" ) {
 			if ( !isNaN(Number(height)) ) {
 				button.style.height = height + "px";
 			} else {

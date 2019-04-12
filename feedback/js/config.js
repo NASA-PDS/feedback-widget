@@ -4,10 +4,14 @@ var config = {
 		label: "",			// default: Need Help?
 		color: "",			// default: NASA blue
 		fontColor: "",		// default: white
-		fontSize: "",		// default: 15px
+		fontSize: "",		// default: 16px
 		size: {
 			width: "",		// default: 150px
 			height: ""		// default: 60px
+		},
+		placement: {
+			side: "",		// default: right
+			offset: ""		// default: 18vh or 0vw
 		}
 	},
 	feedback: {

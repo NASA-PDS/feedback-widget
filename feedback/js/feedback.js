@@ -97,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	},
 	sendButton,
-	HOST = "https://pds-gamma.jpl.nasa.gov",
 	captchaUrl = "/feedback/recaptcha-v3-verify.php",
 	feedbackUrl = "/email-service/SubmitFeedback",
 	modal = document.createElement("div"),
@@ -113,6 +112,8 @@ document.addEventListener("DOMContentLoaded", function(){
 		options = options || {};
 
 		// default properties
+		options.host = options.host || "";
+
 		options.tab.label = options.tab.label || "Need Help?";
 		options.tab.color = options.tab.color || "#0b3d91";
 		options.tab.fontColor = options.tab.fontColor || "white";
@@ -122,10 +123,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		options.feedback.header = options.feedback.header || "Help Desk";
 		options.feedback.text = options.feedback.text || "How can we help you? Send us your question or feedback and we will get back to you within the next 24 hours."
-		options.statusSuccess = options.statusSuccess || "Thank you for making the PDS a better site."
-		options.statusError = options.statusError || "There was an error sending your feedback."
-		options.followupSuccess = options.followupSuccess || "If you provided an email address, a PDS representative will get back to you as soon as possible."
-		options.followupError = options.followupError || "If the problem persists, please email ";
+		options.feedback.sentStatus = options.feedback.sentStatus || "Thank you for making the PDS a better site."
+		options.feedback.sentFollowup = options.feedback.sentFollowup || "If you provided an email address, a PDS representative will get back to you as soon as possible."
+		options.feedback.errorStatus = options.feedback.errorStatus || "There was an error sending your feedback."
+		options.feedback.errorFollowup = options.feedback.errorFollowup || "If the problem persists, please email ";
 		options.feedback.followupGeneral = options.feedback.followupGeneral || "In the meantime, you may find the following links helpful:";
         options.feedback.followupLinks = options.feedback.followupLinks || "https://pds.nasa.gov/site-help.shtml,https://pds.nasa.gov/home/users/,https://pds.nasa.gov/home/proposers/,https://pds.nasa.gov/home/providers/";
         
@@ -233,9 +234,9 @@ document.addEventListener("DOMContentLoaded", function(){
 					// TODO - fails on remote nodes due to CORS
 					// still?
 					if ( success === true ) {
-						message.innerHTML = options.statusSuccess + "<br/>" + options.followupSuccess;
+						message.innerHTML = options.feedback.sentStatus + "<br/>" + options.feedback.sentFollowup;
 					} else {
-						message.innerHTML = options.statusError + "<br/>" + options.followupError + "<a href='mailto:pds_operator@jpl.nasa.gov'>pds_operator@jpl.nasa.gov</a>.";
+						message.innerHTML = options.feedback.errorStatus + "<br/>" + options.feedback.errorFollowup + "<a href='mailto:pds_operator@jpl.nasa.gov'>pds_operator@jpl.nasa.gov</a>.";
 					}
 					modalBody.appendChild( message );
 
@@ -266,7 +267,7 @@ document.addEventListener("DOMContentLoaded", function(){
 							//console.log(data);
 							captchaScore = parseFloat(data.substring(data.indexOf("float") + 6, data.indexOf("float") + 9));
 							if (captchaScore > 0.70) {
-								options.url = options.url || HOST + feedbackUrl;
+								options.url = options.url || options.host + feedbackUrl;
 								options.adapter = options.adapter || new window.Feedback.XHR(options.url);
 								emptyElements(modalBody);
 								returnMethods.send(options.adapter);
@@ -280,7 +281,7 @@ document.addEventListener("DOMContentLoaded", function(){
 						error: function (XMLHttpRequest, textStatus, errorThrown) {
 							modalBody.setAttribute("class", "feedback-body confirmation");
 							var message = document.createElement("p");
-							message.innerHTML = "Status: " + textStatus + "; Error: " + errorThrown + "<br/>" + options.followupError + "<a href='mailto:pds_operator@jpl.nasa.gov'>pds_operator@jpl.nasa.gov</a>.";
+							message.innerHTML = "Status: " + textStatus + "; Error: " + errorThrown + "<br/>" + options.feedback.errorFollowup + "<a href='mailto:pds_operator@jpl.nasa.gov'>pds_operator@jpl.nasa.gov</a>.";
 							modalBody.appendChild(message);
 						}
 					});
@@ -385,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				id: "feedback-type",
 				name: "Type",
 				label: "Type",
-				values: "Comment,Question,Problem/Bug,Kudos,Other",
+				values: config.feedback.feedbackType,
 				required: false
 			},
 			{

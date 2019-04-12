@@ -603,28 +603,25 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
   -ms-transform: rotate(-90deg) scale(1.02);
   transform: rotate(-90deg);
 
-    -webkit-transition: all .5s ease;
+  -webkit-transition: all .5s ease;
   -moz-transition: all .5s ease;
   -o-transition: all .5s ease;
   transition: all .5s ease;
 
-  right: -8px;
-  top: 33%;
   padding: 5px 14px 14px 14px;
   border-bottom: 0px;
 
-  -webkit-transform-origin: 100% 100% 0;
-  -ms-transform-origin: 100% 100% 0;
-  transform-origin: 100% 100% 0;
-  
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   border-radius: 4px;
+
   height: 60px;
   width: 150px;
   font-size: 16px;
+  right: -55px;
+  top: 18vh;
 }
 
 .feedbackTab img {
@@ -636,8 +633,48 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
     -moz-transform: rotate(-90deg) translateY(-5px);
     -ms-transform: rotate(-90deg) scale(1.02) translateY(-5px);
     transform: rotate(-90deg) translateY(-5px);
-    /*background: #18ad1c;*/
 }
+
+.feedbackTab.left {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg) scale(1.02);
+    transform: rotate(90deg);
+    right: initial;
+    left: -55px;
+}
+.feedbackTab.left:hover, .feedbackTab.left:focus, .feedbackTab.left:active {
+    -webkit-transform: rotate(90deg) translateY(-5px);
+    -moz-transform: rotate(90deg) translateY(-5px);
+    -ms-transform: rotate(90deg) scale(1.02) translateY(-5px);
+    transform: rotate(90deg) translateY(-5px);
+}
+
+.feedbackTab.bottom, .feedbackTab.top {
+    -webkit-transform: initial;
+    -moz-transform: initial;
+    -ms-transform: initial;
+    transform: initial;
+    right: initial;
+}
+.feedbackTab.bottom:hover, .feedbackTab.bottom:focus, .feedbackTab.bottom:active {
+    -webkit-transform: translateY(-5px);
+    -moz-transform: translateY(-5px);
+    -ms-transform: scale(1.02) translateY(-5px);
+    transform: translateY(-5px);
+}
+
+.feedbackTab.top {
+    top: -10px;
+    padding: 14px 14px 5px 14px;
+}
+.feedbackTab.top:hover, .feedbackTab.top:focus, .feedbackTab.top:active {
+    -webkit-transform: translateY(5px);
+    -moz-transform: translateY(5px);
+    -ms-transform: scale(1.02) translateY(5px);
+    transform: translateY(5px);
+}
+
 
 .feedback-form-container{
     display: grid;

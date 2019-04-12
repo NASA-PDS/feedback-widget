@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		options.tab.label = options.tab.label || "Need Help?";
 		options.tab.color = options.tab.color || "#0b3d91";
 		options.tab.fontColor = options.tab.fontColor || "white";
-		options.tab.fontSize = options.tab.fontSize || "15px";
+		options.tab.fontSize = options.tab.fontSize || "16px";
 		options.tab.size.width = options.tab.size.width || "170px";
 		options.tab.size.height = options.tab.size.height || "60px";
 
@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		button.style.background = options.tab.color;
 		button.style.color = options.tab.fontColor;
 		var fontSize = options.tab.fontSize;
-		if ( fontSize !== "15px" ) { // if not default
+		if ( fontSize !== "16px" ) { // if not default
 			if ( !isNaN(Number(fontSize)) ) {
 				button.style.fontSize = options.tab.fontSize + "px";
 				button.appendChild(document.createTextNode(options.tab.label));
@@ -331,8 +331,49 @@ document.addEventListener("DOMContentLoaded", function(){
 				console.log("Invalid value for tab height. Please check the configuration file.");
 			}
 		}
-		button.className = "feedbackTab";
 
+		var side = options.tab.placement.side.toLowerCase();
+		var offset = options.tab.placement.offset;
+		if ( !isNaN(Number(offset)) ) {
+			if ( !(side === "right" || side === "") ) {
+				if ( side === "left" ) {
+					button.setAttribute("class", "feedbackTab left");
+					if ( offset !== undefined ) {
+						button.style.top = offset + "vh";
+					}
+				} else if ( side === "top" || side === "bottom" ) {
+					if ( offset !== undefined ) {
+						button.style.left = offset + "vw";
+					}
+					if ( side === "bottom" ) {
+						button.setAttribute("class", "feedbackTab bottom");
+						if ( height === "60px" ) {
+							button.style.top = "calc(100vh - 50px)";
+						} else {
+							if ( !isNan(Number(height)) ) {
+								button.style.top = "calc(100vh - " + height + "px + 10px)";
+							}
+						}
+					} else {
+						button.setAttribute("class", "feedbackTab top");
+					}
+				} else {
+					console.log("Invalid value for SIDE of screen to place the tab. The valid options " +
+						"are LEFT, RIGHT, TOP, or BOTTOM. Please check the configuration file.");
+				}
+			} else {
+				if ( offset !== undefined ) {
+					button.style.top = offset + "vh";
+				}
+				button.setAttribute("class", "feedbackTab");
+			}
+		} else {
+			console.log("Invalid value for OFFSET of tab placement. Please check the configuration file.");
+		}
+
+		if ( !button.classList.contains("feedbackTab") ) {
+			button.className = "feedbackTab";
+		}
 		button.onclick = returnMethods.open;
 
 		if ( options.appendTo !== null ) {

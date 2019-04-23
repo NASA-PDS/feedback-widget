@@ -2,8 +2,8 @@ var config = {
 	host: "https://pds.nasa.gov",		// REQUIRED. no default value.
 	tab: {
 		label: "",			// default: Need Help?
-		color: "",			// default: NASA blue
-		fontColor: "",		// default: white
+		color: "",			// default: #0b3d91
+		fontColor: "",		// default: #ffffff
 		fontSize: "",		// default: 16px
 		size: {
 			width: "",		// default: 150px
@@ -11,7 +11,7 @@ var config = {
 		},
 		placement: {
 			side: "",		// default: right
-			offset: ""		// default: 18vh or 0vw
+			offset: ""		// default: 45vh or 0vw
 		}
 	},
 	feedback: {

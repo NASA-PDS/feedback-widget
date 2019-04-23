@@ -588,16 +588,17 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
 .feedbackTab {
   display: block;
   position: fixed;
-/*  background: #18ad1c; */
-  background: #0b3d91;
+  opacity: 1;
+  z-index: 2;
+  cursor: pointer;
+
+  background-color: #0b3d91;
   color: #ffffff;
   border: 1px solid transparent;
   font-family: Arial;
   line-height: 20px;
-  opacity: 1;
-  z-index: 2;
-  cursor: pointer;
   text-decoration: none;
+
   -webkit-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg) scale(1.02);
@@ -608,31 +609,45 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
   -o-transition: all .5s ease;
   transition: all .5s ease;
 
-  padding: 5px 14px 14px 14px;
-  border-bottom: 0px;
-
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   border-radius: 4px;
 
+  padding: 5px 14px 14px 14px;
   height: 60px;
   width: 150px;
-  font-size: 16px;
   right: -55px;
-  top: 18vh;
+  top: 45vh;
 }
 
-.feedbackTab img {
-    margin-bottom: -2px;
-}
-
-.feedbackTab:hover, .feedbackTab:focus, .feedbackTab:active {
+.feedbackTab:hover,
+.feedbackTab:focus,
+.feedbackTab:active {
     -webkit-transform: rotate(-90deg) translateY(-5px);
     -moz-transform: rotate(-90deg) translateY(-5px);
     -ms-transform: rotate(-90deg) scale(1.02) translateY(-5px);
     transform: rotate(-90deg) translateY(-5px);
+}
+
+.feedbackTab p {
+    font-size: 16px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+.feedbackTab p:before {
+    background-image: url(../image/msg_icon.png);
+    background-size: 18px 18px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 22px;
+    height: 18px;
+    content: "";
+}
+.feedbackTab p.noImage:before {
+    display: none;
 }
 
 .feedbackTab.left {
@@ -643,21 +658,26 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
     right: initial;
     left: -55px;
 }
-.feedbackTab.left:hover, .feedbackTab.left:focus, .feedbackTab.left:active {
+.feedbackTab.left:hover,
+.feedbackTab.left:focus,
+.feedbackTab.left:active {
     -webkit-transform: rotate(90deg) translateY(-5px);
     -moz-transform: rotate(90deg) translateY(-5px);
     -ms-transform: rotate(90deg) scale(1.02) translateY(-5px);
     transform: rotate(90deg) translateY(-5px);
 }
 
-.feedbackTab.bottom, .feedbackTab.top {
+.feedbackTab.bottom,
+.feedbackTab.top {
     -webkit-transform: initial;
     -moz-transform: initial;
     -ms-transform: initial;
     transform: initial;
     right: initial;
 }
-.feedbackTab.bottom:hover, .feedbackTab.bottom:focus, .feedbackTab.bottom:active {
+.feedbackTab.bottom:hover,
+.feedbackTab.bottom:focus,
+.feedbackTab.bottom:active {
     -webkit-transform: translateY(-5px);
     -moz-transform: translateY(-5px);
     -ms-transform: scale(1.02) translateY(-5px);
@@ -668,7 +688,9 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
     top: -10px;
     padding: 14px 14px 5px 14px;
 }
-.feedbackTab.top:hover, .feedbackTab.top:focus, .feedbackTab.top:active {
+.feedbackTab.top:hover,
+.feedbackTab.top:focus,
+.feedbackTab.top:active {
     -webkit-transform: translateY(5px);
     -moz-transform: translateY(5px);
     -ms-transform: scale(1.02) translateY(5px);
@@ -705,4 +727,22 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
 .feedback-body.confirmation p a,
 .feedback-body.confirmation p a:hover {
     color: #0000cc;
+}
+
+@media only screen and (max-width: 1024px) {
+    .touchevents .feedbackTab {
+        background-color: transparent;
+        border: none;
+        -webkit-transform: initial;
+        -moz-transform: initial;
+        -ms-transform: initial;
+        transform: initial;
+        padding: 0;
+
+        height: 30px;
+        width: 30px;
+        right: 5px;
+        top: calc(100vh - 35px);
+        background-image: url('../image/iconfinder_Help.svg');
+    }
 }

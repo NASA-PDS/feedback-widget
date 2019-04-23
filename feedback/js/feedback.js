@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		options.tab.label = options.tab.label || "Need Help?";
 		options.tab.color = options.tab.color || "#0b3d91";
-		options.tab.fontColor = options.tab.fontColor || "white";
+		options.tab.fontColor = options.tab.fontColor || "#ffffff";
 		options.tab.fontSize = options.tab.fontSize || "16px";
 		options.tab.size.width = options.tab.size.width || "170px";
 		options.tab.size.height = options.tab.size.height || "60px";
@@ -295,80 +295,104 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		glass.className = "feedback-glass";
 
-		// options = options || {};
-
 		var button = document.createElement("button");
-		button.style.background = options.tab.color;
-		button.style.color = options.tab.fontColor;
-		var fontSize = options.tab.fontSize;
-		if ( fontSize !== "16px" ) { // if not default
-			if ( !isNaN(Number(fontSize)) ) {
-				button.style.fontSize = options.tab.fontSize + "px";
-				button.appendChild(document.createTextNode(options.tab.label));
-			} else {
-				console.log("Invalid value for font size. Please check the configuration file.");
-			}
-		} else {
-			var img = document.createElement("img");
-			img.src = '/feedback/image/msg_icon.png';
-			img.height = '15';
-			button.appendChild(img)
-			button.appendChild(document.createTextNode('  ' + options.tab.label));
-		}
-		var width = options.tab.size.width;
-		var height = options.tab.size.height;
-		if ( width !== "150px" ) {
-			if ( !isNaN(Number(width)) ) {
-				button.style.width = width + "px";
-			} else {
-				console.log("Invalid value for tab width. Please check the configuration file.");
-			}
-		}
-		if ( height !== "60px" ) {
-			if ( !isNaN(Number(height)) ) {
-				button.style.height = height + "px";
-			} else {
-				console.log("Invalid value for tab height. Please check the configuration file.");
-			}
-		}
+		// var img = document.createElement("img");
 
-		var side = options.tab.placement.side.toLowerCase();
-		var offset = options.tab.placement.offset;
-		if ( !isNaN(Number(offset)) ) {
-			if ( !(side === "right" || side === "") ) {
-				if ( side === "left" ) {
-					button.setAttribute("class", "feedbackTab left");
-					if ( offset !== undefined ) {
-						button.style.top = offset + "vh";
-					}
-				} else if ( side === "top" || side === "bottom" ) {
-					if ( offset !== undefined ) {
-						button.style.left = offset + "vw";
-					}
-					if ( side === "bottom" ) {
-						button.setAttribute("class", "feedbackTab bottom");
-						if ( height === "60px" ) {
-							button.style.top = "calc(100vh - 50px)";
-						} else {
-							if ( !isNan(Number(height)) ) {
-								button.style.top = "calc(100vh - " + height + "px + 10px)";
+		if ( Modernizr.touchevents && window.screen.width < 1025 ) {
+			// img.src = "/feedback/image/iconfinder_Help.svg";
+			// button.appendChild(img);
+			var $window = $(window);
+			var docHeight = $(document).height();
+			var rafId;
+			window.requestAnimationFrame = window.requestAnimationFrame
+				|| window.mozRequestAnimationFrame
+				|| window.webkitRequestAnimationFrame
+				|| window.msRequestAnimationFrame;
+			$window.on("scroll", function() {
+				if ( $window.scrollTop() + $window.height() > docHeight - 65 ) {
+					rafId = window.requestAnimationFrame(function() {
+						var offset = ($window.scrollTop() - 65) * ($window.scrollTop() - 65) * 0.00001;
+						button.style.webkitTransform = "translateY(-" + offset + "px)";
+						button.style.mozTransform = "translateY(-" + offset + "px)";
+						button.style.transform = "translateY(-" + offset + "px)";
+					});
+				} else {
+					window.cancelAnimationFrame(rafId);
+					button.style.webkitTransform = "initial";
+					button.style.mozTransform = "initial";
+					button.style.transform = "initial";
+				}
+			});
+		} else {
+			button.style.backgroundColor = options.tab.color;
+			button.style.color = options.tab.fontColor;
+			var p = document.createElement("p");
+			p.append(document.createTextNode(options.tab.label));
+			var fontSize = options.tab.fontSize;
+			if (fontSize !== "16px") {
+				if (!isNan(Number(fontSize))) {
+					p.setAttribute("class", "noImage");
+					p.style.fontSize = fontSize + "px";
+				} else {
+					console.log("Invalid value for font size. Please check the configuration file.");
+				}
+			}
+			button.appendChild(p);
+			var width = options.tab.size.width;
+			var height = options.tab.size.height;
+			if (width !== "150px") {
+				if (!isNaN(Number(width))) {
+					button.style.width = width + "px";
+				} else {
+					console.log("Invalid value for tab width. Please check the configuration file.");
+				}
+			}
+			if (height !== "60px") {
+				if (!isNaN(Number(height))) {
+					button.style.height = height + "px";
+				} else {
+					console.log("Invalid value for tab height. Please check the configuration file.");
+				}
+			}
+
+			var side = options.tab.placement.side.toLowerCase();
+			var offset = options.tab.placement.offset;
+			if (!isNaN(Number(offset))) {
+				if (!(side === "right" || side === "")) {
+					if (side === "left") {
+						button.setAttribute("class", "feedbackTab left");
+						if (offset !== undefined) {
+							button.style.top = offset + "vh";
+						}
+					} else if (side === "top" || side === "bottom") {
+						if (offset !== undefined) {
+							button.style.left = offset + "vw";
+						}
+						if (side === "bottom") {
+							button.setAttribute("class", "feedbackTab bottom");
+							if (height === "60px") {
+								button.style.top = "calc(100vh - 50px)";
+							} else {
+								if (!isNan(Number(height))) {
+									button.style.top = "calc(100vh - " + height + "px + 10px)";
+								}
 							}
+						} else {
+							button.setAttribute("class", "feedbackTab top");
 						}
 					} else {
-						button.setAttribute("class", "feedbackTab top");
+						console.log("Invalid value for SIDE of screen to place the tab. The valid options " +
+							"are LEFT, RIGHT, TOP, or BOTTOM. Please check the configuration file.");
 					}
 				} else {
-					console.log("Invalid value for SIDE of screen to place the tab. The valid options " +
-						"are LEFT, RIGHT, TOP, or BOTTOM. Please check the configuration file.");
+					if (offset !== undefined) {
+						button.style.top = offset + "vh";
+					}
+					button.setAttribute("class", "feedbackTab");
 				}
 			} else {
-				if ( offset !== undefined ) {
-					button.style.top = offset + "vh";
-				}
-				button.setAttribute("class", "feedbackTab");
+				console.log("Invalid value for OFFSET of tab placement. Please check the configuration file.");
 			}
-		} else {
-			console.log("Invalid value for OFFSET of tab placement. Please check the configuration file.");
 		}
 
 		if ( !button.classList.contains("feedbackTab") ) {

@@ -22,9 +22,10 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 <!-- PDS Feedback Widget -->
 <!-- Only add JQuery if you do not already include a library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
-<script src="/feedback/js/config.js"></script>
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
+<link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
+<script src="/feedback/js/modernizr-custom.js"></script>
+<script src="/feedback/js/config.js"></script>
 <script src="/feedback/js/feedback.js"></script>
 <!-- -->
 ```
@@ -60,10 +61,12 @@ A list and explanation of optional configurable variables can be found in the [f
      feedback/css/
      feedback/css/feedback.css
      feedback/image/
+     feedback/image/iconfinder_Help.svg
      feedback/image/msg_icon.png
      feedback/js/
      feedback/js/config.js
-     feedback/js/feedback.js   
+     feedback/js/feedback.js 
+     feedback/js/modernizr-custom.js  
      ```
 
    * *Windows*
@@ -91,7 +94,7 @@ fontColor       | The color of the text on the Feedback tab.         | "#ffffff"
 fontSize        | The size of the text on the Feedback tab.<sup>[4](#fourth)</sup> | "16px"    | integer<sup>[5](#fifth)</sup>
 placement       |                                                    | n/a                     | n/a
 &emsp;side      | The side of screen to attach the Feedback tab.     | "right"                 | RIGHT, LEFT, TOP, BOTTOM
-&emsp;offset    | The offset from top or left side of the screen.<sup>[6](#sixth)</sup> | "50vh" | integer<sup>[5](#fifth)</sup>; [0, 95)
+&emsp;offset    | The offset from top or left side of the screen.<sup>[6](#sixth)</sup> | "45vh" | integer<sup>[5](#fifth)</sup>; [0, 95)
 size            |                                                    | n/a                     | n/a
 &emsp;width     | The width of the Feedback tab.                     | "150px"                 | integer<sup>[5](#fifth)</sup>
 &emsp;height    | The height of the Feedback tab.                    |  "60px"                 | integer<sup>[5](#fifth)</sup>
@@ -129,9 +132,10 @@ The following steps will help you uninstall the feedback widget:
 <!-- PDS Feedback Widget -->
 <!-- Only add JQuery if you do not already include a librar -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
-<script src="/feedback/js/config.js"></script>
 <script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
+<link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
+<script src="/feedback/js/modernizr-custom.js"><script>
+<script src="/feedback/js/config.js"></script>
 <script src="/feedback/js/feedback.js"></script>
 <!-- -->
 ```

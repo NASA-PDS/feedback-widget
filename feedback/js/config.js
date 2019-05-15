@@ -17,6 +17,23 @@ var config = {
 	feedback: {
 		header: "Help Desk",
 		feedbackType: "Comment,Question,Problem/Bug,Kudos,Other",
-		followupLinks: "https://pds.nasa.gov/site-help.shtml,https://pds.nasa.gov/home/users/,https://pds.nasa.gov/home/proposers/,https://pds.nasa.gov/home/providers/"
+		followupLinks: [ 
+                    { 
+                        title: "Information for Data Users",
+                        url: "https://pds.nasa.gov/home/users/"
+                    },
+                    {
+                        title: "Information for Proposers",
+                        url: "https://pds.nasa.gov/home/proposers/"
+                    },
+                    {
+                        title: "Information for Providers",
+                        url: "https://pds.nasa.gov/home/providers/"
+                    },
+                    { 
+                        title: "Site Map", 
+                        url: "https://pds.nasa.gov/site-help.shtml" 
+                    },
+		]
 	}
 };

@@ -697,6 +697,11 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
     transform: translateY(5px);
 }
 
+.feedback-modal {
+    /* overwriting above default values  */
+    overflow: visible;
+    max-height: fit-content;
+}
 
 .feedback-form-container{
     display: grid;
@@ -724,9 +729,17 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
     margin-bottom: 0;
 }
 
-.feedback-body.confirmation p a,
-.feedback-body.confirmation p a:hover {
+.feedback-body p a,
+.feedback-body p a:hover {
     color: #0000cc;
+}
+
+.additionalHelp {
+    margin: 0px 0px -5px 5px;
+}
+
+.additionalHelp a {
+    padding-left: 5px;
 }
 
 @media only screen and (max-width: 1024px) {

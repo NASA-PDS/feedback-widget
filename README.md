@@ -30,7 +30,7 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 <!-- -->
 ```
 
-3. Download the Feedback Widget tar or zip from [Github](https://github.jpl.nasa.gov/PDSEN/feedback-widget/releases/latest) to your local machine, then copy to your home directory on the machine hosting the website.
+3. Download the Feedback Widget tar or zip from [Github](https://github.com/NASA-PDS-Incubator/feedback-widget/releases/latest) to your local machine, then copy to your home directory on the machine hosting the website.
 
 4. From your home directory on the machine hosting your website, unpack the widget:
 ```

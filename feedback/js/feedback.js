@@ -251,9 +251,7 @@ document.addEventListener("DOMContentLoaded", function(){
 			},
 
 			onloadCallback: function() {
-				// check URL - redirected from old feedback page?
 				if ( new URLSearchParams(window.location.search).get("feedback") === "true" ) {
-					window.history.replaceState( {}, document.title, "/" );
 					returnMethods.open();
 				}
 			},

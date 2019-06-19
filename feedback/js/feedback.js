@@ -250,6 +250,12 @@ document.addEventListener("DOMContentLoaded", function(){
 
 			},
 
+			onloadCallback: function() {
+				if ( new URLSearchParams(window.location.search).get("feedback") === "true" ) {
+					returnMethods.open();
+				}
+			},
+
 			captchaCallback: function( response ) {
 				if ( document.getElementById("feedback-comment").reportValidity() ) {
 					$.ajax({
@@ -285,6 +291,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		};
 
+		window.onloadCallback = returnMethods.onloadCallback;
 		window.captchaCallback = returnMethods.captchaCallback;
 
 		glass.className = "feedback-glass";

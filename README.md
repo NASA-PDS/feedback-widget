@@ -24,7 +24,7 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 <!-- PDS Feedback Widget -->
 <!-- Only add JQuery if you do not already include a library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
+<script src='https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit' async defer></script>
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
 <script src="/feedback/js/modernizr-custom.js"></script>
 <script src="/feedback/js/config.js"></script>

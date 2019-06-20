@@ -118,18 +118,11 @@ document.addEventListener("DOMContentLoaded", function(){
 		options.tab.color = options.tab.color || "#0b3d91";
 		options.tab.fontColor = options.tab.fontColor || "#ffffff";
 		options.tab.fontSize = options.tab.fontSize || "16px";
-		options.tab.size.width = options.tab.size.width || "170px";
+		options.tab.size.width = options.tab.size.width || "150px";
 		options.tab.size.height = options.tab.size.height || "60px";
 
 		options.feedback.header = options.feedback.header || "Help Desk";
-		options.feedback.text = options.feedback.text || "How can we help you? Send us your question or feedback and we will get back to you within 1 business day."
-		options.feedback.sentStatus = options.feedback.sentStatus || "Thank you for making the PDS a better site."
-		options.feedback.sentFollowup = options.feedback.sentFollowup || "If you provided an email address, a PDS representative will get back to you as soon as possible."
-		options.feedback.errorStatus = options.feedback.errorStatus || "There was an error sending your feedback."
-		options.feedback.errorFollowup = options.feedback.errorFollowup || "If the problem persists, please email ";
-		options.feedback.followupGeneral = options.feedback.followupGeneral || "In the meantime, you may find the following links helpful:";
-                options.feedback.followupLinks = options.feedback.followupLinks;
-        
+
 		options.page = options.page || new window.Feedback.Form();
 
 		var button,
@@ -156,22 +149,20 @@ document.addEventListener("DOMContentLoaded", function(){
 				modalBody.className = "feedback-body";
 
 				emptyElements( modalBody );
-				modalBody.appendChild( element("p", options.feedback.text) );
+				modalBody.appendChild( element("p", "How can we help you? Send us your question or feedback and we will get back to you within 1 business day.") );
 				modalBody.appendChild( options.page.dom );
 				var links = options.feedback.followupLinks;
-                                if ( links !== "" ) {
-				    var followupLinks = element("p", "In the meantime, you may find the following links helpful:");
-				    followupLinks.className = "additionalHelp";
-				    followupLinks.insertAdjacentHTML("beforeend", "<ul>");
-				    console.log(followupLinks)
-				    for (var i = 0; i < links.length; i++) {
-					followupLinks.insertAdjacentHTML("beforeend", "<li><a href=\"" + links[i].url + "\">" + links[i].title + "</a></li>");
-				    }
-				    console.log(followupLinks)
-				    followupLinks.insertAdjacentHTML("beforeend", "</ul>");
-				    modalBody.appendChild( followupLinks );
-				    window.followupLinks = followupLinks;
-                                }
+				if ( links !== "" ) {
+					var additionalHelp = element("p", "In the meantime, you may find the following links helpful:"),
+						followupLinks = document.createElement("ul");
+					additionalHelp.className = "additionalHelp";
+					for (var i = 0; i < links.length; i++) {
+						followupLinks.insertAdjacentHTML('beforeend', '<li><a href="' + links[i].url + '">' + links[i].title + '</a></li>');
+					}
+					additionalHelp.insertAdjacentElement("beforeend", followupLinks);
+					modalBody.insertAdjacentElement("beforeend", additionalHelp);
+					window.additionalHelp = additionalHelp;
+				}
                                 
 				// Send button
 				sendButton = document.createElement("input");
@@ -245,40 +236,24 @@ document.addEventListener("DOMContentLoaded", function(){
 
 					modalBody.setAttribute("class", "feedback-body confirmation");
 					var message = document.createElement("p");
-					// TODO - fails on remote nodes due to CORS
-					// still?
 					if ( success === true ) {
-						message.innerHTML = options.feedback.sentStatus + "<br/>" + options.feedback.sentFollowup;
+						message.innerHTML = 'Thank you for making the PDS a better site.<br/>If you provided an email address, a PDS representative will get back to you as soon as possible.';
 					} else {
-						message.innerHTML = options.feedback.errorStatus + "<br/>" + options.feedback.errorFollowup + "<a href='mailto:pds_operator@jpl.nasa.gov'>pds_operator@jpl.nasa.gov</a>.";
+						message.innerHTML = 'There was an error sending your feedback.<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
 					}
 					modalBody.appendChild( message );
 
-					var followupGeneral = options.feedback.followupGeneral;
-					var followupLinks = options.feedback.followupLinks;
-					if ( followupGeneral !== "" ) {
-					    //var followup = document.createElement("p");
-					    //followup.innerHTML = followupGeneral;
-					    if ( followupLinks !== "" ) {
-						modalBody.appendChild( window.followupLinks );
-					    }
-					    /*	var links = followupLinks.split(",");
-							for ( var i = 0; i < links.length; i++ ) {
-								followup.insertAdjacentHTML("beforeend", "<br><a href=\"" + links[i] + "\">" + links[i] + "</a>");
-							}
-						}
-						if ( followupLinks !== "" ) {
-						    for (var i = 0; i < followupLinks.length; i++) {
-							followup.insertAdjacentHTML("beforeend", "<li>" + "<a href=\"" + followupLinks[i].url + "\">" + followupLinks[i].title + "</a></li>");
-						    }
-						    additionalHelp.insertAdjacentHTML("beforeend", "</ul>");
-						    modalBody.appendChild( additionalHelp );
-						    }
-						    modalBody.appendChild( followup );*/
-					    
+					if ( window.additionalHelp ) {
+						modalBody.appendChild( window.additionalHelp );    
 					}
 				});
 
+			},
+
+			onloadCallback: function() {
+				if ( new URLSearchParams(window.location.search).get("feedback") === "true" ) {
+					returnMethods.open();
+				}
 			},
 
 			captchaCallback: function( response ) {
@@ -296,38 +271,37 @@ document.addEventListener("DOMContentLoaded", function(){
 								emptyElements(modalBody);
 								returnMethods.send(options.adapter);
 							} else {
-								modalBody.setAttribute("class", "feedback-body confirmation");
-								var message = document.createElement("p");
-								message.innerHTML = "Are you a bot? Suspicious behavior detected.";
-								modalBody.appendChild(message);
+								modalBody.setAttribute("class", "feedback-body suspectedBot");
+								document.getElementById("recaptcha").disabled = true;
+								modalBody.insertAdjacentElement("afterbegin", element("p", "Are you a bot? Suspicious behavior detected."));
 							}
 						},
 						error: function (XMLHttpRequest, textStatus, errorThrown) {
-							modalBody.setAttribute("class", "feedback-body confirmation");
+							modalBody.setAttribute("class", "feedback-body captchaError");
 							var message = document.createElement("p");
-							message.innerHTML = "Status: " + textStatus + "; Error: " + errorThrown + "<br/>" + options.feedback.errorFollowup + "<a href='mailto:pds_operator@jpl.nasa.gov'>pds_operator@jpl.nasa.gov</a>.";
-							modalBody.appendChild(message);
+							message.innerHTML = 'Status: ' + textStatus + '; Error: ' + errorThrown + '<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+							modalBody.insertAdjacentElement("afterbegin", message);
 						}
 					});
+				} else {
+					return false;
 				}
 				window.grecaptcha.reset();
 			}
 
 		};
 
+		window.onloadCallback = returnMethods.onloadCallback;
 		window.captchaCallback = returnMethods.captchaCallback;
 
 		glass.className = "feedback-glass";
 
 		var button = document.createElement("button");
-		// var img = document.createElement("img");
 
 		if ( Modernizr.touchevents && window.screen.width < 1025 ) {
-			// img.src = "/feedback/image/iconfinder_Help.svg";
-			// button.appendChild(img);
-			var $window = $(window);
-			var docHeight = $(document).height();
-			var rafId;
+			var $window = $(window),
+				docHeight = $(document).height(),
+				rafId;
 			window.requestAnimationFrame = window.requestAnimationFrame
 				|| window.mozRequestAnimationFrame
 				|| window.webkitRequestAnimationFrame
@@ -501,36 +475,28 @@ document.addEventListener("DOMContentLoaded", function(){
 			item = this.elements[ i ];
 			var div = document.createElement("div");
 			div.classList.add("feedback-input");
-			switch( item.type ) {
-				case "textarea":
-					div.appendChild( element("label", item.label + ":" + (( item.required === true ) ? " *" : "")) );
-					var textarea = document.createElement("textarea");
-					textarea.name = item.name;
-					textarea.id = item.id;
-					div.appendChild( ( item.element = textarea ) );
-					break;
-				case "input":
-					div.appendChild( element("label", item.label + ": " + (( item.required === true) ? "*" : "")) );
-					var input = document.createElement("input");
-					input.name = item.name;
-					input.id = item.id;
-					div.appendChild( (item.element = input) );
-					break;
-				case "select":
-					div.appendChild( element("label", item.label + ": " + (( item.required === true) ? "*" : "")) );
-					var select = document.createElement("select");
-					select.name = item.name;
-					select.id = item.id;
-					var options = item.values.split(",");
-					var option;
-					for (j = 0; j < options.length; j++) {
-						option = document.createElement("option");
-						option.value = option.textContent = options[j];
-						select.appendChild(option);
-					}
-					div.appendChild( (item.element = select) );
-					break;
+
+			var formEl = document.createElement( item.type );
+			formEl.name = item.name;
+			formEl.id = item.id;
+			
+			if ( item.required ) {
+				formEl.required = true;
+				div.appendChild( element("label", item.label + ": *"));
+			} else {
+				div.appendChild( element("label", item.label + ":"));
 			}
+
+			if (item.type === "select") {
+				var options = item.values.split(",");
+				for (j = 0; j < options.length; j++) {
+					var option = document.createElement("option");
+					option.value = option.textContent = options[j];
+					formEl.appendChild(option);
+				}
+			}
+
+			div.appendChild( (item.element = formEl) );
 			this.dom.appendChild(div);
 		}
 

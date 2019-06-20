@@ -17,12 +17,14 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 >> NOTE: These installation instructions assume the use of an Apache Web Server. The Feedback widget can be installed on other web servers, but the exact steps may differ depending upon the software and configuration.
 
 
-1. Add the following code snippet between the `<head>` tag on each page of your website. If your website uses a header file, you can place it in there:
+1. [Register](#register) with Engineering Node if you have not already.
+
+2. Add the following code snippet between the `<head>` tag on each page of your website. If your website uses a header file, you can place it in there:
 ```
 <!-- PDS Feedback Widget -->
 <!-- Only add JQuery if you do not already include a library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src='https://www.google.com/recaptcha/api.js?render=explicit' async defer></script>
+<script src='https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit' async defer></script>
 <link rel="stylesheet" href="/feedback/css/feedback.css"  type="text/css" media="screen" />
 <script src="/feedback/js/modernizr-custom.js"></script>
 <script src="/feedback/js/config.js"></script>
@@ -30,7 +32,7 @@ Here are the steps for deploying the Feedback widget to your website on an Apach
 <!-- -->
 ```
 
-3. Download the Feedback Widget tar or zip from [Github](https://github.jpl.nasa.gov/PDSEN/feedback-widget/releases/latest) to your local machine, then copy to your home directory on the machine hosting the website.
+3. Download the Feedback Widget tar or zip from [Github](https://github.com/NASA-PDS-Incubator/feedback-widget/releases/latest) to your local machine, then copy to your home directory on the machine hosting the website.
 
 4. From your home directory on the machine hosting your website, unpack the widget:
 ```
@@ -84,11 +86,11 @@ color           | The color of the Feedback tab.                     | "#0b3d91"
 fontColor       | The color of the text on the Feedback tab.         | "#ffffff" (white)       | text<sup>[3](#third)</sup>
 fontSize        | The size of the text on the Feedback tab.<sup>[4](#fourth)</sup> | "16px"    | integer<sup>[5](#fifth)</sup>
 placement       |                                                    | n/a                     | n/a
-&emsp;side      | The side of screen to attach the Feedback tab.     | "right"                 | RIGHT, LEFT, TOP, BOTTOM
-&emsp;offset    | The offset from top or left side of the screen.<sup>[6](#sixth)</sup> | "45vh" | integer<sup>[5](#fifth)</sup>; [0, 95)
+&emsp;- side    | The side of screen to attach the Feedback tab.     | "right"                 | RIGHT, LEFT, TOP, BOTTOM
+&emsp;- offset  | The offset from top or left side of the screen.<sup>[6](#sixth)</sup> | "45vh" | integer<sup>[5](#fifth)</sup>; [0, 95)
 size            |                                                    | n/a                     | n/a
-&emsp;width     | The width of the Feedback tab.                     | "150px"                 | integer<sup>[5](#fifth)</sup>
-&emsp;height    | The height of the Feedback tab.                    |  "60px"                 | integer<sup>[5](#fifth)</sup>
+&emsp;- width   | The width of the Feedback tab.                     | "150px"                 | integer<sup>[5](#fifth)</sup>
+&emsp;- height  | The height of the Feedback tab.                    |  "60px"                 | integer<sup>[5](#fifth)</sup>
 
 <a name="zero"></a><sup>0:</sup> All values must be enclosed within the existing double quotation marks.<br>
 <a name="first"></a><sup>1:</sup> Do **not** include an email address here and leave a space at the end of the incomplete phrase as shown in the default value. Note that the email address for the PDS operator will be inserted at the end, so structure the sentence accordingly.<br>

@@ -7,7 +7,9 @@ PDS Feedback Widget Javascript-based overlay and modal window that provides a us
 
 Before being able to use this widget, you will need to register your hostname with the Engineering Node in order to enable the Google Re-captcha that is part of the application.
 
-Email pds_operator@jpl.nasa.gov with the hostname(s) for your website.
+Email pds_operator@jpl.nasa.gov with the following information:
+* Hostname(s) for your website
+* Point(s) of contact to receive the Feedback
 
 
 ## Install

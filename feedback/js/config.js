@@ -31,9 +31,13 @@ var config = {
                         url: "https://pds.nasa.gov/home/providers/"
                     },
                     { 
+                        title: "OpenPlanetary Forum", 
+                        url: "https://forum.openplanetary.org/"
+                    },
+                    { 
                         title: "Site Map", 
                         url: "https://pds.nasa.gov/site-help.shtml" 
-                    },
+                    }
 		]
 	}
 };

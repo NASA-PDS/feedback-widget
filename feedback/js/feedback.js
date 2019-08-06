@@ -113,21 +113,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		// default properties
 		options.host = options.host || "";
-
-		options.tab.label = options.tab.label || "Need Help?";
-		options.tab.color = options.tab.color || "#0b3d91";
-		options.tab.fontColor = options.tab.fontColor || "#ffffff";
-		options.tab.fontSize = options.tab.fontSize || "16px";
-		options.tab.size.width = options.tab.size.width || "150px";
-		options.tab.size.height = options.tab.size.height || "60px";
-
 		options.feedback.header = options.feedback.header || "Help Desk";
-
 		options.page = options.page || new window.Feedback.Form();
 
-		var button,
-		glass = document.createElement("div"),
-		returnMethods = {
+		var glass = document.createElement("div"),
+			returnMethods = {
 
 			// open send feedback modal window
 			open: function() {
@@ -151,15 +141,15 @@ document.addEventListener("DOMContentLoaded", function(){
 				emptyElements( modalBody );
 				modalBody.appendChild( element("p", "How can we help you? Send us your question or feedback and we will get back to you within 1 business day.") );
 				modalBody.appendChild( options.page.dom );
-				var links = options.feedback.followupLinks;
+				var links = options.feedback.additionalLinks;
 				if ( links !== "" ) {
 					var additionalHelp = element("p", "In the meantime, you may find the following links helpful:"),
-						followupLinks = document.createElement("ul");
+						additionalLinks = document.createElement("ul");
 					additionalHelp.className = "additionalHelp";
 					for (var i = 0; i < links.length; i++) {
-						followupLinks.insertAdjacentHTML('beforeend', '<li><a href="' + links[i].url + '">' + links[i].title + '</a></li>');
+						additionalLinks.insertAdjacentHTML('beforeend', '<li><a href="' + links[i].url + '">' + links[i].title + '</a></li>');
 					}
-					additionalHelp.insertAdjacentElement("beforeend", followupLinks);
+					additionalHelp.insertAdjacentElement("beforeend", additionalLinks);
 					modalBody.insertAdjacentElement("beforeend", additionalHelp);
 					window.additionalHelp = additionalHelp;
 				}
@@ -322,74 +312,123 @@ document.addEventListener("DOMContentLoaded", function(){
 				}
 			});
 		} else {
-			button.style.backgroundColor = options.tab.color;
-			button.style.color = options.tab.fontColor;
-			var p = document.createElement("p");
-			p.append(document.createTextNode(options.tab.label));
-			var fontSize = options.tab.fontSize;
-			if (fontSize !== "16px") {
-				if (!isNan(Number(fontSize))) {
-					p.setAttribute("class", "noImage");
-					p.style.fontSize = fontSize + "px";
-				} else {
-					console.log("Invalid value for font size. Please check the configuration file.");
-				}
-			}
-			button.appendChild(p);
-			var width = options.tab.size.width;
-			var height = options.tab.size.height;
-			if (width !== "150px") {
-				if (!isNaN(Number(width))) {
-					button.style.width = width + "px";
-				} else {
-					console.log("Invalid value for tab width. Please check the configuration file.");
-				}
-			}
-			if (height !== "60px") {
-				if (!isNaN(Number(height))) {
-					button.style.height = height + "px";
-				} else {
-					console.log("Invalid value for tab height. Please check the configuration file.");
-				}
-			}
+			// default properties
+			options.tab.label = options.tab.label || "Need Help?";
+			options.tab.color = options.tab.color || "#0b3d91";
+			options.tab.fontColor = options.tab.fontColor || "#ffffff";
+			options.tab.fontSize = options.tab.fontSize || "16";
+			options.tab.size.width = options.tab.size.width || "150";
+			options.tab.size.height = options.tab.size.height || "60";
+			options.tab.placement.side = options.tab.placement.side || "right";
+			options.tab.placement.offset = options.tab.placement.offset || "50";
 
-			var side = options.tab.placement.side.toLowerCase();
-			var offset = options.tab.placement.offset;
-			if (!isNaN(Number(offset))) {
-				if (!(side === "right" || side === "")) {
-					if (side === "left") {
-						button.setAttribute("class", "feedbackTab left");
-						if (offset !== undefined) {
-							button.style.top = offset + "vh";
+			var useConfig = {
+				setColors: function(el, color, bgColor) {
+					el.style.color = color;
+					el.style.backgroundColor = bgColor;
+				},
+
+				setText: function(el, label, fontSize) {
+					var p = document.createElement("p");
+					p.append( document.createTextNode(label) );
+					if ( fontSize !== "16" ) {
+						if ( !isNaN(fontSize) ) {
+							el.setAttribute("class", "noImage");
+							el.style.fontSize = fontSize + "px";
+						} else {
+							console.log("Invalid value for font size. Please check the configuration file.");
 						}
-					} else if (side === "top" || side === "bottom") {
-						if (offset !== undefined) {
-							button.style.left = offset + "vw";
+					}
+					el.appendChild(p);
+				},
+
+				setDimensions: function(el, width, height) {
+					if ( !isNaN(width) && !isNaN(height) ) {
+						el.style.width = width + "px";
+						el.style.height = height + "px";
+					} else {
+						if ( isNaN(width) ) {
+							console.log("Invalid value for tab WIDTH. Please check the configuration file.");
 						}
-						if (side === "bottom") {
-							button.setAttribute("class", "feedbackTab bottom");
-							if (height === "60px") {
-								button.style.top = "calc(100vh - 50px)";
+						if ( isNaN(height) ) {
+							console.log("Invalid value for tab HEIGHT. Please check the configuration file.");
+						}
+					}
+				},
+
+				calculateAdjustment: function(width, height) {
+					return -0.5 * ( Number(width) - Number(height) ) - 5;
+				},
+
+				calculateMaxOffset: function(width, height) {
+					return [ window.innerHeight - 0.5 * ( Number(width) + Number(height) ), window.innerWidth - Number(width) ];
+				},
+
+				setPlacement: function(el, side, offset, maxOffset, adjustment) {
+					if ( !isNaN(offset) ) {
+						if ( side === "right" || side === "left" ) {
+							var os = Number(offset) * window.innerHeight / 100,
+								minOffset = -1 * ( Number(adjustment) + 5 ),
+								adjust = ( adjustment !== undefined );
+							if ( os < minOffset ) {
+								el.style.top = minOffset + "px";
+							} else if ( os > Number(maxOffset[0]) ) {
+								el.style.top = maxOffset[0] + "px";
 							} else {
-								if (!isNan(Number(height))) {
-									button.style.top = "calc(100vh - " + height + "px + 10px)";
+								el.style.top = offset + "vh";
+							}
+							if ( side === "right" ) {
+								el.setAttribute("class", "feedbackTab");
+								if ( adjust ) {
+									el.style.right = adjustment + "px";
+								}
+							} else  {
+								el.setAttribute("class", "feedbackTab left");
+								if ( adjust ) {
+									el.style.left = adjustment + "px";
 								}
 							}
+						} else if (side === "top" || side === "bottom" ) {
+							if ( Number(offset) < 0 ) {
+								el.style.left = "0";
+							} else if ( Number(offset) * window.innerWidth / 100 > Number(maxOffset[1]) ) {
+								el.style.left = maxOffset[1] + "px";
+							} else {
+								el.style.left = offset + "vw";
+							}
+							if ( side === "top" ) {
+								el.setAttribute("class", "feedbackTab top");
+							} else {
+								el.setAttribute("class", "feedbackTab bottom");
+							}
 						} else {
-							button.setAttribute("class", "feedbackTab top");
+							console.log("Invalid value for SIDE of screen to place the tab. The valid options " +
+								"are LEFT, RIGHT, TOP, or BOTTOM. Please check the configuration file.");
 						}
 					} else {
-						console.log("Invalid value for SIDE of screen to place the tab. The valid options " +
-							"are LEFT, RIGHT, TOP, or BOTTOM. Please check the configuration file.");
+						console.log("Invalid value for OFFSET of tab placement. Please check the configuration file.");
 					}
-				} else {
-					if (offset !== undefined) {
-						button.style.top = offset + "vh";
-					}
-					button.setAttribute("class", "feedbackTab");
 				}
-			} else {
-				console.log("Invalid value for OFFSET of tab placement. Please check the configuration file.");
+			};
+
+			useConfig.setColors(button, options.tab.fontColor, options.tab.color);
+			useConfig.setText(button, options.tab.label, options.tab.fontSize);
+
+			var	adjustment,
+				width = Math.max( Number(options.tab.size.width), Number(options.tab.size.height) ),
+				height = Math.min( Number(options.tab.size.width), Number(options.tab.size.height) ),
+				defaultWidth = ( width === 150 ),
+				defaultHeight = ( height === 60 );
+			if ( !defaultWidth || !defaultHeight ) {
+				useConfig.setDimensions(button, width, height);
+				adjustment = useConfig.calculateAdjustment(width, height);
+			}
+
+			var side = options.tab.placement.side.toLowerCase(),
+				offset = options.tab.placement.offset,
+				maxOffset = useConfig.calculateMaxOffset(width, height);
+			if ( offset !== "50" || side !== "right" || adjustment !== undefined ) {
+				useConfig.setPlacement(button, side, offset, maxOffset, adjustment);
 			}
 		}
 

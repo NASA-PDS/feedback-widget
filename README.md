@@ -46,7 +46,7 @@ unzip <.zip>
 ```
 
 5. Next, configure the Feedback Widget . From the root folder of the widget, open `feedback/js/config.js` in your text editor of choice.<br><br>
-A list and explanation of optional configurable variables can be found in the [following section](#configurable-variables). *Note: It is highly recommended that you update **followupLinks** to provide help information unique to your website.*
+A list and explanation of optional configurable variables can be found in the [following section](#configurable-variables). *Note: It is highly recommended that you update **additionalLinks** to provide help information unique to your website.*
 
 6. Now we want to move the files needed for the widget to the home directory for your website, or *WEB_HOME_PATH*. This *WEB_HOME_PATH* is the path where your homepage resides. For example, if your homepage is `/my/website/index.html`, then your *WEB_HOME_PATH* is `/my/website/`. To move the files, from the command-line:
 
@@ -77,37 +77,41 @@ A list and explanation of optional configurable variables can be found in the [f
 
 ## Configurable Variables
 
-Variable        | Description                                  | Default Value | Accepted Values or Types<sup>[0](#zero)</sup>
---------------- | -------------------------------------------------- | ----------------------------- | --------------------
-header          | The header or title in the Feedback pane.          | "Help Desk"                   | text
-feedbackType    | Types of feedback.              | "Comment,Question,Problem/Bug,Kudos,Other" | text<sup>[2](#second)</sup>
-followupLinks   | Links that are listed at the end of followupGeneral. | "https://pds.nasa.gov/site-help.shtml,<br>https://pds.nasa.gov/home/users/,<br>https://pds.nasa.gov/home/proposers/,<br>https://pds.nasa.gov/home/providers/" | valid URLs<sup>[2](#second)</sup>
-|               |                                                    |                         |											       |
-label           | The text on the Feedback tab.                      | "Need Help?"            | text
-color           | The color of the Feedback tab.                     | "#0b3d91" (NASA blue)   | text<sup>[3](#third)</sup>
-fontColor       | The color of the text on the Feedback tab.         | "#ffffff" (white)       | text<sup>[3](#third)</sup>
-fontSize        | The size of the text on the Feedback tab.<sup>[4](#fourth)</sup> | "16px"    | integer<sup>[5](#fifth)</sup>
-placement       |                                                    | n/a                     | n/a
-&emsp;- side    | The side of screen to attach the Feedback tab.     | "right"                 | RIGHT, LEFT, TOP, BOTTOM
-&emsp;- offset  | The offset from top or left side of the screen.<sup>[6](#sixth)</sup> | "45vh" | integer<sup>[5](#fifth)</sup>; [0, 95)
-size            |                                                    | n/a                     | n/a
-&emsp;- width   | The width of the Feedback tab.                     | "150px"                 | integer<sup>[5](#fifth)</sup>
-&emsp;- height  | The height of the Feedback tab.                    |  "60px"                 | integer<sup>[5](#fifth)</sup>
+**Variable**    | **Description**                               | **Default Value**         | **Accepted Values or Types**<sup>[0](#zero)</sup>
+--------------- | --------------------------------------------- | ------------------------- | --------------------
+header          | The header or title in the Feedback popup.    | "Help Desk"               | text
+feedbackType    | Type of feedback for the user to specify if he or she so desires.| "Comment,Question,Problem/Bug,Kudos,Other" | text<sup>[1](#first)</sup>
+additionalLinks | Additional link(s) the user may find helpful. | ---                       | ---
+&emsp;- title   | The text displayed for the link.              | "Information for Data Users"<br>"Information for Proposers"<br>"Information for Providers"<br>"OpenPlanetary Forum"<br>"Site Map" | text
+&emsp;- url     | The URL of the link.                          | "https://pds.nasa.gov/home/users/"<br>"https://pds.nasa.gov/home/proposers/"<br>"https://pds.nasa.gov/home/providers/"<br>"https://forum.openplanetary.org"<br>"https://pds.nasa.gov/site-help.shtml" | valid URLs
+|               |                                               |                           |
+label           | The text on the Feedback tab.                 | "Need Help?"              | text
+color           | The color of the Feedback tab.                | "#0b3d91" (NASA blue)     | text<sup>[2](#second)</sup>
+fontColor       | The color of the text on the Feedback tab.    | "#ffffff" (white)         | text<sup>[2](#second)</sup>
+fontSize<sup>[3](#third)</sup>| The size of the text on the Feedback tab. | "16"            | integer<sup>[4](#fourth),[6](#sixth)</sup>
+size            | ---                                           | ---                       | ---
+&emsp;- width   | The width of the Feedback tab.                | "150"                     | integer<sup>[4](#fourth),[6](#sixth)</sup>
+&emsp;- height  | The height of the Feedback tab.               | "60"                      | integer<sup>[4](#fourth),[6](#sixth)</sup>
+placement       | ---                                           | ---                       | ---
+&emsp;- side    | The side of screen to attach the Feedback tab.| "right"                   | "RIGHT" "LEFT" "TOP" "BOTTOM"
+&emsp;- offset  | The offset from top or left side of the screen.<sup>[8](#eighth)</sup>|"50"| integer<sup>[5](#fifth),[6](#sixth)</sup> &#8712; [0,100]<sup>[7](#seventh)</sup>
 
-<a name="zero"></a><sup>0:</sup> All values must be enclosed within the existing double quotation marks.<br>
-<a name="first"></a><sup>1:</sup> Do **not** include an email address here and leave a space at the end of the incomplete phrase as shown in the default value. Note that the email address for the PDS operator will be inserted at the end, so structure the sentence accordingly.<br>
-<a name="second"></a><sup>2:</sup> If there are multiple values, separate them with a comma and **no** spaces.<br>
-<a name="third"></a><sup>3:</sup> Must be written as a hexadecimal, RGB, or HSL color, or from [this list](https://www.w3schools.com/colors/colors_names.asp) of accepted color names. If you are unfamiliar with these formats or looking for a color, [ColorHexa](https://www.colorhexa.com) is a helpful resource to find the exact color you want in all the accepted formats. Be sure to include '#', 'rgb(..., ..., ...)', or 'hsl(..., ..., ...)' as needed.<br>
-<a name="fourth"></a><sup>4:</sup> Using this option will remove the message icon.<br>
-<a name="fifth"></a><sup>5:</sup> Enter the integer value only. Do not include such characters as '%', 'vh', 'vw', or 'px'.<br>
-<a name="sixth"></a><sup>6:</sup> Depending on the side of screen specified, this places the vertical center of the tab proportional to the length of the screen or the left corner of the tab proportional to the width of the screen. For instance, if you fill in config.js as follows:
+<a name="zero"></a><sup>0:</sup> All values must be enclosed within double quotation marks.<br>
+<a name="first"></a><sup>1:</sup> Separate multiple values with a comma.<br>
+<a name="second"></a><sup>2:</sup> Must be written as a hexadecimal, RGB, or HSL color, or be from [this list](https://www.w3schools.com/colors/colors_names.asp) of accepted color names. If you are unfamiliar with these formats, sites such as [ColorHexa](https://www.colorhexa.com) can help you find an exact color in the accepted formats. Be sure to include '#', 'rgb()', or 'hsl()' within the double quotations in config.js as needed.<br>
+<a name="third"></a><sup>3:</sup> Using this option will remove the message icon.<br>
+<a name="fourth"></a><sup>4:</sup> Used with the unit 'px' at 1px = 1/96th of an inch. For a digital facsimile of how different px values render on your screen, there are resources such as this [w3schools widget](https://www.w3schools.com/cssref/tryit.asp?filename=trycss_unit_px). (To use, adjust the integer value for any font-size in the left pane then click the green 'Run' button near the top to refresh the results in the right pane.)<br>
+<a name="fifth"></a><sup>5:</sup> Used with the unit 'vh' or 'vw' at 1vh or 1vw = 1/100th of the browser window's height or width.<br>
+<a name="sixth"></a><sup>6:</sup> Enter the integer value only. Do not include such characters as '%', 'vh', 'vw', 'px', 'pt', 'em', 'rem', etc.<br>
+<a name="seventh"></a><sup>7:</sup> If this value is not in the range of 0 to 100 (inclusive) or is such that a part of the tab would not be visible, the most extreme value allowed which keeps the entire tab visible will be applied.<br>
+<a name="eighth"></a><sup>8:</sup> Depending on the side of screen specified, this places the vertical center of the tab proportional to the height of the screen or the left corner of the tab proportional to the width of the screen. For instance, if you fill in config.js as follows:
   ```
     placement: {
       side: "bottom",
       offset: "0"
     }
   ```
-  the Feedback tab will be on the bottom of the screen square in the left corner.
+  the Feedback tab will be on the bottom of the screen squarely in the left corner.
   ```
     placement: {
       side: "left",

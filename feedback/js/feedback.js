@@ -162,13 +162,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				sendButton.setAttribute("data-callback", "captchaCallback");
 				sendButton.setAttribute("id", "recaptcha");
 
-				// reCAPTCHA branding
-				rcBrand = document.createElement("p");
-				rcBrand.innerHTML = 'This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and <a href="https://policies.google.com/terms">Terms of Service</a> apply.';
-				rcBrand.className = "reCaptcha-brand";
-
 				modalFooter.className = "feedback-footer";
-				modalFooter.appendChild( rcBrand );
 				modalFooter.appendChild( sendButton );
 
 				modal.setAttribute("id", "feedback-form");
@@ -183,6 +177,17 @@ document.addEventListener("DOMContentLoaded", function(){
 				window.grecaptcha.render("recaptcha", {sitekey: "6LfLCIgUAAAAAI3xLW5PQijxDyZcaUUlTyPDfYlZ"});
 			},
 
+			setupClose: function() {
+				emptyElements( modalBody );
+				sendButton.disabled = false;
+
+				sendButton.value = "Close";
+
+				sendButton.onclick = function() {
+					returnMethods.close();
+					return false;
+				};
+			},
 
 			// close modal window
 			close: function() {
@@ -214,15 +219,7 @@ document.addEventListener("DOMContentLoaded", function(){
 				// send data to adapter for processing
 				adapter.send( data, function( success ) {
 
-					emptyElements( modalBody );
-					sendButton.disabled = false;
-
-					sendButton.value = "Close";
-
-					sendButton.onclick = function() {
-						returnMethods.close();
-						return false;
-					};
+					returnMethods.setupClose();
 
 					modalBody.setAttribute("class", "feedback-body confirmation");
 					var message = document.createElement("p");
@@ -268,9 +265,14 @@ document.addEventListener("DOMContentLoaded", function(){
 						},
 						error: function (XMLHttpRequest, textStatus, errorThrown) {
 							modalBody.setAttribute("class", "feedback-body captchaError");
+							returnMethods.setupClose();
 							var message = document.createElement("p");
-							message.innerHTML = 'Status: ' + textStatus + '; Error: ' + errorThrown + '<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+							message.innerHTML = '<b>Status: </b>' + textStatus + '; <b>Error: </b>' + errorThrown + '<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
 							modalBody.insertAdjacentElement("afterbegin", message);
+
+							if ( window.additionalHelp ) {
+								modalBody.appendChild( window.additionalHelp );
+							}
 						}
 					});
 				} else {

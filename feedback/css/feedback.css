@@ -596,6 +596,7 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
   color: #ffffff;
   border: 1px solid transparent;
   font-family: Arial;
+  font-size: 16px;
   line-height: 20px;
   text-decoration: none;
 
@@ -632,7 +633,6 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
 }
 
 .feedbackTab p {
-    font-size: 16px;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -715,10 +715,9 @@ button.feedback-btn.small, input[type="submit"].feedback-btn.small {
 }
 
 .feedback-footer {
-    padding: 10px 10px 0;
     display: flex;
     height: 40px;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: baseline;
 }
 

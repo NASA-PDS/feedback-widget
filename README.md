@@ -88,23 +88,22 @@ additionalLinks | Additional link(s) the user may find helpful. | ---           
 label           | The text on the Feedback tab.                 | "Need Help?"              | text
 color           | The color of the Feedback tab.                | "#0b3d91" (NASA blue)     | text<sup>[2](#second)</sup>
 fontColor       | The color of the text on the Feedback tab.    | "#ffffff" (white)         | text<sup>[2](#second)</sup>
-fontSize<sup>[3](#third)</sup>| The size of the text on the Feedback tab. | "16"            | integer<sup>[4](#fourth),[6](#sixth)</sup>
+fontSize        | The size of the text on the Feedback tab.     | "16"                      | integer<sup>[3](#third),[5](#fifth)</sup>
 size            | ---                                           | ---                       | ---
-&emsp;- width   | The width of the Feedback tab.                | "150"                     | integer<sup>[4](#fourth),[6](#sixth)</sup>
-&emsp;- height  | The height of the Feedback tab.               | "60"                      | integer<sup>[4](#fourth),[6](#sixth)</sup>
+&emsp;- width   | The width of the Feedback tab.                | "150"                     | integer<sup>[3](#third),[5](#fifth)</sup>
+&emsp;- height  | The height of the Feedback tab.               | "60"                      | integer<sup>[3](#third),[5](#fifth)</sup>
 placement       | ---                                           | ---                       | ---
 &emsp;- side    | The side of screen to attach the Feedback tab.| "right"                   | "RIGHT" "LEFT" "TOP" "BOTTOM"
-&emsp;- offset  | The offset from top or left side of the screen.<sup>[8](#eighth)</sup>|"50"| integer<sup>[5](#fifth),[6](#sixth)</sup> &#8712; [0,100]<sup>[7](#seventh)</sup>
+&emsp;- offset  | The offset from top or left side of the screen.<sup>[7](#seventh)</sup>|"50"| integer<sup>[4](#fourth),[5](#fifth)</sup> &#8712; [0,100]<sup>[6](#sixth)</sup>
 
 <a name="zero"></a><sup>0:</sup> All values must be enclosed within double quotation marks.<br>
 <a name="first"></a><sup>1:</sup> Separate multiple values with a comma.<br>
 <a name="second"></a><sup>2:</sup> Must be written as a hexadecimal, RGB, or HSL color, or be from [this list](https://www.w3schools.com/colors/colors_names.asp) of accepted color names. If you are unfamiliar with these formats, sites such as [ColorHexa](https://www.colorhexa.com) can help you find an exact color in the accepted formats. Be sure to include '#', 'rgb()', or 'hsl()' within the double quotations in config.js as needed.<br>
-<a name="third"></a><sup>3:</sup> Using this option will remove the message icon.<br>
-<a name="fourth"></a><sup>4:</sup> Used with the unit 'px' at 1px = 1/96th of an inch. For a digital facsimile of how different px values render on your screen, there are resources such as this [w3schools widget](https://www.w3schools.com/cssref/tryit.asp?filename=trycss_unit_px). (To use, adjust the integer value for any font-size in the left pane then click the green 'Run' button near the top to refresh the results in the right pane.)<br>
-<a name="fifth"></a><sup>5:</sup> Used with the unit 'vh' or 'vw' at 1vh or 1vw = 1/100th of the browser window's height or width.<br>
-<a name="sixth"></a><sup>6:</sup> Enter the integer value only. Do not include such characters as '%', 'vh', 'vw', 'px', 'pt', 'em', 'rem', etc.<br>
-<a name="seventh"></a><sup>7:</sup> If this value is not in the range of 0 to 100 (inclusive) or is such that a part of the tab would not be visible, the most extreme value allowed which keeps the entire tab visible will be applied.<br>
-<a name="eighth"></a><sup>8:</sup> Depending on the side of screen specified, this places the vertical center of the tab proportional to the height of the screen or the left corner of the tab proportional to the width of the screen. For instance, if you fill in config.js as follows:
+<a name="third"></a><sup>3:</sup> Used with the unit 'px' at 1px = 1/96th of an inch. For a digital facsimile of how different px values render on your screen, there are resources such as this [w3schools widget](https://www.w3schools.com/cssref/tryit.asp?filename=trycss_unit_px). (To use, adjust the integer value for any font-size in the left pane then click the green 'Run' button near the top to refresh the results in the right pane.)<br>
+<a name="fourth"></a><sup>4:</sup> Used with the unit 'vh' or 'vw' at 1vh or 1vw = 1/100th of the browser window's height or width.<br>
+<a name="fifth"></a><sup>5:</sup> Enter the integer value only. Do not include such characters as '%', 'vh', 'vw', 'px', 'pt', 'em', 'rem', etc.<br>
+<a name="sixth"></a><sup>6:</sup> If this value is not in the range of 0 to 100 (inclusive) or is such that a part of the tab would not be visible, the most extreme value allowed which keeps the entire tab visible will be applied.<br>
+<a name="seventh"></a><sup>7:</sup> Depending on the side of screen specified, this places the vertical center of the tab proportional to the height of the screen or the left corner of the tab proportional to the width of the screen. For instance, if you fill in config.js as follows:
   ```
     placement: {
       side: "bottom",

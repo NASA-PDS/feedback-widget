@@ -564,7 +564,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		for (var key in data) {
 			emailData += key + ': ';
-			emailData += data[key] + '\n';
+			emailData += encodeURIComponent(data[key]) + '\n';
 		}
 
 		emailData += '\nLocation: ' + window.location.href + '\n';

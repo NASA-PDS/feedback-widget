@@ -1,13 +1,13 @@
 # PDS Feedback Widget
 
-PDS Feedback Widget Javascript-based overlay and modal window that provides a user with a form to provide comments or feedback on the web page they are currently accessing. When a comment is submitted, it will be sent to pds_operator@jpl.nasa.gov and forwarded to the applicable node that has the application deployed.
+PDS Feedback Widget Javascript-based overlay and modal window that provides a user with a form to provide comments or feedback on the web page they are currently accessing. When a comment is submitted, it will be sent to the [PDS Help Desk](mailto:pds_operator@jpl.nasa.gov) and forwarded to the applicable node that has the application deployed.
 
 
 ## Register
 
 Before being able to use this widget, you will need to register your hostname with the Engineering Node in order to enable the Google Re-captcha that is part of the application.
 
-Email pds_operator@jpl.nasa.gov with the following information:
+Email [PDS Help Desk](mailto:pds_operator@jpl.nasa.gov) with the following information:
 * Hostname(s) for your website
 * Point(s) of contact to receive the Feedback
 
@@ -45,7 +45,7 @@ tar -xvzf <.tar.gz>
 unzip <.zip>
 ```
 
-5. If you did not receive it when you registered with the Engineering Node, email the [PDS Operator](mailto:pds_operator@jpl.nasa.gov?subject=Feedback%20reCAPTCHA%20secret%20key) for the Re-captcha secret key. From the root folder of the widget, open `feedback/recaptcha-v3-verify.php` and replace `$SECRET_CODE` within the single quotation marks with the provided secret key.
+5. If you did not receive it when you registered with the Engineering Node, email the [PDS Help Desk](mailto:pds_operator@jpl.nasa.gov?subject=Feedback%20reCAPTCHA%20secret%20key) for the Re-captcha secret key. From the root folder of the widget, open `feedback/recaptcha-v3-verify.php` and replace `$SECRET_CODE` within the single quotation marks with the provided secret key.
 6. Next, configure the Feedback Widget . From the root folder of the widget, open `feedback/js/config.js` in your text editor of choice.<br><br>
 A list and explanation of optional configurable variables can be found in the [following section](#configurable-variables). *Note: It is highly recommended that you update **additionalLinks** to provide help information unique to your website.*
 

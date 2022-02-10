@@ -45,10 +45,11 @@ tar -xvzf <.tar.gz>
 unzip <.zip>
 ```
 
-5. Next, configure the Feedback Widget . From the root folder of the widget, open `feedback/js/config.js` in your text editor of choice.<br><br>
+5. If you did not receive it when you registered with the Engineering Node, email the [PDS Operator](mailto:pds_operator@jpl.nasa.gov?subject=Feedback%20reCAPTCHA%20secret%20key) for the Re-captcha secret key. From the root folder of the widget, open `feedback/recaptcha-v3-verify.php` and replace `$SECRET_CODE` within the single quotation marks with the provided secret key.
+6. Next, configure the Feedback Widget . From the root folder of the widget, open `feedback/js/config.js` in your text editor of choice.<br><br>
 A list and explanation of optional configurable variables can be found in the [following section](#configurable-variables). *Note: It is highly recommended that you update **additionalLinks** to provide help information unique to your website.*
 
-6. Now we want to move the files needed for the widget to the home directory for your website, or *WEB_HOME_PATH*. This *WEB_HOME_PATH* is the path where your homepage resides. For example, if your homepage is `/my/website/index.html`, then your *WEB_HOME_PATH* is `/my/website/`. To move the files, from the command-line:
+7. Now we want to move the files needed for the widget to the home directory for your website, or *WEB_HOME_PATH*. This *WEB_HOME_PATH* is the path where your homepage resides. For example, if your homepage is `/my/website/index.html`, then your *WEB_HOME_PATH* is `/my/website/`. To move the files, from the command-line:
 
    * *macOS / Linux*
      ```

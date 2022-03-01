@@ -216,17 +216,39 @@ document.addEventListener("DOMContentLoaded", function(){
 						url: captchaUrl,
 						data: {response: response},
 						success: function (data) {
-							//console.log(data);
-							captchaScore = parseFloat(data.substring(data.indexOf("float") + 6, data.indexOf("float") + 9));
-							if (captchaScore > 0.70) {
-								options.url = options.url || options.host + feedbackUrl;
-								options.adapter = options.adapter || new window.Feedback.XHR(options.url);
-								emptyElements(modalBody);
-								returnMethods.send(options.adapter);
+							// console.log(data);
+							var captchaResponse = JSON.parse(data),
+								captchaSuccess = captchaResponse.success;
+							if (captchaSuccess) {
+								captchaScore = captchaResponse.score;
+								if (captchaScore >= 0.70) {
+									options.url = options.url || options.host + feedbackUrl;
+									options.adapter = options.adapter || new window.Feedback.XHR(options.url);
+									emptyElements(modalBody);
+									returnMethods.send(options.adapter);
+								} else {
+									modalBody.setAttribute("class", "feedback-body suspectedBot");
+									document.getElementById("recaptcha").disabled = true;
+									modalBody.insertAdjacentElement("afterbegin", element("p", "Are you a bot? Suspicious behavior detected."));
+								}
 							} else {
-								modalBody.setAttribute("class", "feedback-body suspectedBot");
+								var captchaErrors = captchaResponse["error-codes"],
+									captchaErrorsLength = captchaErrors.length,
+									captchaErrorsHtmlString;
+								if (captchaErrorsLength > 1) {
+									captchaErrorsHtmlString = '<ul>';
+									for (var i = 0; i < captchaErrors.length; i++) {
+										captchaErrorsHtmlString += '<li>' + captchaErrors[i] + '</li>';
+									}
+									captchaErrorsHtmlString += '</ul>';
+								} else {
+									captchaErrorsHtmlString = captchaErrors[0];
+								}
+								modalBody.setAttribute("class", "feedback-body captchaError");
 								document.getElementById("recaptcha").disabled = true;
-								modalBody.insertAdjacentElement("afterbegin", element("p", "Are you a bot? Suspicious behavior detected."));
+								var message = document.createElement("p");
+								message.innerHTML = '<b>Error codes: </b>' + captchaErrorsHtmlString + '<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+								modalBody.insertAdjacentElement("afterbegin", message);
 							}
 						},
 						error: function (XMLHttpRequest, textStatus, errorThrown) {

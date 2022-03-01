@@ -1,4 +1,5 @@
-<!-- 
+<?php
+/*
 	Copyright (c) 2019, California Institute of Technology ("Caltech").  
 	U.S. Government sponsorship acknowledged.
 
@@ -28,8 +29,7 @@
 	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 	POSSIBILITY OF SUCH DAMAGE.
--->
-<?php
+*/
 
 	$url = 'https://www.google.com/recaptcha/api/siteverify';
 
@@ -42,7 +42,7 @@
 	$verifyResponse = file_get_contents($verifyURL);
 	$responseData = json_decode($verifyResponse);
 
-	var_dump($responseData);
+	echo json_encode($responseData);
 
 	if ($responseData && $responseData->action === $action) {
 		return $responseData->score;

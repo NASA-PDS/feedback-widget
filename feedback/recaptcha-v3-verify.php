@@ -40,11 +40,11 @@
 	$response = $_POST['response'];
 	$verifyURL = $url . '?secret=' . urlencode($secret) . '&response=' . urlencode($response);
 	$verifyResponse = file_get_contents($verifyURL);
-	$responseData = json_decode($verifyResponse);
+	$responseData = json_decode($verifyResponse, false);
 
 	echo json_encode($responseData);
 
-	if ($responseData && $responseData->action === $action) {
+	if ($responseData && $responseData->success) {
 		return $responseData->score;
 	} else {
 		return false;

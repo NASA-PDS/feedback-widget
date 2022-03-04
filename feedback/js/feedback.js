@@ -217,38 +217,43 @@ document.addEventListener("DOMContentLoaded", function(){
 						data: {response: response},
 						success: function (data) {
 							// console.log(data);
-							var captchaResponse = JSON.parse(data),
-								captchaSuccess = captchaResponse.success;
-							if (captchaSuccess) {
-								captchaScore = captchaResponse.score;
-								if (captchaScore >= 0.70) {
-									options.url = options.url || options.host + feedbackUrl;
-									options.adapter = options.adapter || new window.Feedback.XHR(options.url);
-									emptyElements(modalBody);
-									returnMethods.send(options.adapter);
-								} else {
-									modalBody.setAttribute("class", "feedback-body suspectedBot");
-									document.getElementById("recaptcha").disabled = true;
-									modalBody.insertAdjacentElement("afterbegin", element("p", "Are you a bot? Suspicious behavior detected."));
-								}
-							} else {
-								var captchaErrors = captchaResponse["error-codes"],
-									captchaErrorsLength = captchaErrors.length,
-									captchaErrorsHtmlString;
-								if (captchaErrorsLength > 1) {
-									captchaErrorsHtmlString = '<ul>';
-									for (var i = 0; i < captchaErrors.length; i++) {
-										captchaErrorsHtmlString += '<li>' + captchaErrors[i] + '</li>';
-									}
-									captchaErrorsHtmlString += '</ul>';
-								} else {
-									captchaErrorsHtmlString = captchaErrors[0];
-								}
-								modalBody.setAttribute("class", "feedback-body captchaError");
+							if (data === "true") {
+								options.url = options.url || options.host + feedbackUrl;
+								options.adapter = options.adapter || new window.Feedback.XHR(options.url);
+								emptyElements(modalBody);
+								returnMethods.send(options.adapter);
+							} else if (data === "false") {
+								modalBody.setAttribute("class", "feedback-body suspectedBot");
 								document.getElementById("recaptcha").disabled = true;
-								var message = document.createElement("p");
-								message.innerHTML = '<b>Error codes: </b>' + captchaErrorsHtmlString + '<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+								modalBody.insertAdjacentElement("afterbegin", element("p", "Are you a bot? Suspicious behavior detected."));
+							} else {
+								modalBody.setAttribute("class", "feedback-body captchaError");
+								returnMethods.setupClose();
+								var message = document.createElement("p"),
+									htmlString;
+								if (data.startsWith("[")) {
+									var captchaErrors = JSON.parse(data),
+										captchaErrorsLength = captchaErrors.length,
+										captchaErrorsHtmlString;
+									if (captchaErrorsLength > 1) {
+										captchaErrorsHtmlString = '<ul>';
+										for (var i = 0; i < captchaErrors.length; i++) {
+											captchaErrorsHtmlString += '<li>' + captchaErrors[i] + '</li>';
+										}
+										captchaErrorsHtmlString += '</ul>';
+									} else {
+										captchaErrorsHtmlString = captchaErrors[0];
+									}
+									htmlString = '<b>Error codes: </b>' + captchaErrorsHtmlString + '<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+								} else {
+									htmlString = '<b>No reCaptcha response.</b><br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+								}
+								message.innerHTML = htmlString;
 								modalBody.insertAdjacentElement("afterbegin", message);
+
+								if ( window.additionalHelp ) {
+									modalBody.appendChild( window.additionalHelp );
+								}
 							}
 						},
 						error: function (XMLHttpRequest, textStatus, errorThrown) {

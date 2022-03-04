@@ -40,13 +40,21 @@
 	$response = $_POST['response'];
 	$verifyURL = $url . '?secret=' . urlencode($secret) . '&response=' . urlencode($response);
 	$verifyResponse = file_get_contents($verifyURL);
-	$responseData = json_decode($verifyResponse, false);
+	$responseData = json_decode($verifyResponse, true);
 
-	echo json_encode($responseData);
+// 	var_dump($responseData);
 
-	if ($responseData && $responseData->success) {
-		return $responseData->score;
+	if ($responseData) {
+		if ($responseData["success"]) {
+			if ($responseData["score"] >= 0.7) {
+				echo json_encode(TRUE);
+			} else {
+				echo json_encode(FALSE);
+			}
+		} else {
+			echo json_encode($responseData["error-codes"]);
+		}
 	} else {
-		return false;
+		echo "no response";
 	}
 ?>

@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function(){
 					if ( success === true ) {
 						message.innerHTML = 'Thank you for making the PDS a better site.<br/>If you provided an email address, a PDS representative will get back to you as soon as possible.';
 					} else {
-						message.innerHTML = 'There was an error sending your feedback.<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+						message.innerHTML = 'There was an error sending your feedback.<br/>If the problem persists, please email the <a href="mailto:pds_operator@jpl.nasa.gov">PDS Help Desk</a>.';
 					}
 					modalBody.appendChild( message );
 
@@ -244,9 +244,9 @@ document.addEventListener("DOMContentLoaded", function(){
 									} else {
 										captchaErrorsHtmlString = captchaErrors[0];
 									}
-									htmlString = '<b>Error codes: </b>' + captchaErrorsHtmlString + '<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+									htmlString = '<b>Error codes: </b>' + captchaErrorsHtmlString + '<br/>If the problem persists, please email the <a href="mailto:pds_operator@jpl.nasa.gov">PDS Help Desk</a>.';
 								} else {
-									htmlString = '<b>No reCaptcha response.</b><br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+									htmlString = '<b>No reCaptcha response.</b><br/>If the problem persists, please email the <a href="mailto:pds_operator@jpl.nasa.gov">PDS Help Desk</a>.';
 								}
 								message.innerHTML = htmlString;
 								modalBody.insertAdjacentElement("afterbegin", message);
@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function(){
 							modalBody.setAttribute("class", "feedback-body captchaError");
 							returnMethods.setupClose();
 							var message = document.createElement("p");
-							message.innerHTML = '<b>Status: </b>' + textStatus + '; <b>Error: </b>' + errorThrown + '<br/>If the problem persists, please email <a href="mailto:pds_operator@jpl.nasa.gov">pds_operator@jpl.nasa.gov</a>.';
+							message.innerHTML = '<b>Status: </b>' + textStatus + '; <b>Error: </b>' + errorThrown + '<br/>If the problem persists, please email the <a href="mailto:pds_operator@jpl.nasa.gov">PDS Help Desk</a>.';
 							modalBody.insertAdjacentElement("afterbegin", message);
 
 							if ( window.additionalHelp ) {

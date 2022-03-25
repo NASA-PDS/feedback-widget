@@ -35,9 +35,6 @@ A few links that may be helpful for installing and configuring PHP on your Apach
 
 Here are the steps for deploying the Feedback widget to your website on an Apache Web Server:
 
->> NOTE: These installation instructions assume the use of an Apache Web Server with PHP support. The Feedback widget can be installed on other web servers which have PHP enabled, but the exact steps may differ depending upon the software and configuration; web servers without PHP will not be able to install the Feedback widget ([#9](../../issues/9)).
-
-
 1. [Register](#register) with Engineering Node if you have not already.
 
 2. Add the following code snippet between the `<head>` tag on each page of your website. If your website uses a header file, you can place it in there:

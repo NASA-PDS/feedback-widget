@@ -12,6 +12,25 @@ Email [PDS Help Desk](mailto:pds_operator@jpl.nasa.gov) with the following infor
 * Point(s) of contact to receive the Feedback
 
 
+## System Requirements
+
+- Apache Web Server
+- PHP 5.2+
+
+### Notes
+
+- The Feedback widget can be installed on other web servers which have PHP enabled, but the exact steps may differ depending upon the software and configuration.
+- Web servers without PHP will not be able to use the Feedback widget.
+- For PHP versions prior to 8.0.0, verify the JSON extension is enabled.
+    
+### Resources
+
+A few links that may be helpful for installing and configuring PHP on your Apache Web Server:
+- https://www.php.net/manual/en/install.unix.apache2.php
+- https://www.petefreitag.com/item/516.cfm
+- https://www.tutorialspoint.com/php7/php7_apache_configuration.htm
+
+
 ## Install
 
 Here are the steps for deploying the Feedback widget to your website on an Apache Web Server:

@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function(){
 					a.append( document.createTextNode(label) );
 					if ( fontSize !== "16" ) {
 						if ( !isNaN(fontSize) ) {
-							el.setAttribute("class", "noImage");
+							a.setAttribute("class", "noImage");
 							el.style.fontSize = fontSize + "px";
 						} else {
 							console.log("Invalid value for font size. Please check the configuration file.");

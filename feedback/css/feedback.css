@@ -66,7 +66,7 @@
 }
 
 #feedback-tab:hover,
-#feedback-tab:focus,
+#feedback-tab:focus-within,
 #feedback-tab:active {
     -webkit-transform: rotate(-90deg) translateY(-5px);
     -moz-transform: rotate(-90deg) translateY(-5px);
@@ -78,7 +78,7 @@
     margin: 0;
     display: flex;
     justify-content: center;
-    color: white;
+    color: inherit;
 }
 #feedback-tab a,
 #feedback-tab a:hover {

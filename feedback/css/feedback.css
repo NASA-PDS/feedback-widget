@@ -59,9 +59,9 @@
 
   border-radius: 4px 4px 0 0;
   padding: 5px 15px 15px;
-  height: 60px;
-  width: 150px;
-  right: -55px;
+  height: 35px;
+  width: 115px;
+  right: -70px;
   top: 50vh;
 }
 
@@ -74,13 +74,18 @@
     transform: rotate(-90deg) translateY(-5px);
 }
 
-#feedback-tab p {
+#feedback-tab a {
     margin: 0;
     display: flex;
     justify-content: center;
+    color: white;
 }
-#feedback-tab p:before {
-    background-image: url(../image/msg_icon.png);
+#feedback-tab a,
+#feedback-tab a:hover {
+    text-decoration: none;
+}
+#feedback-tab a:before {
+    background-image: url(../image/email_icon.png);
     background-size: 18px 18px;
     background-repeat: no-repeat;
     display: inline-block;
@@ -88,7 +93,7 @@
     height: 18px;
     content: "";
 }
-#feedback-tab p.noImage:before {
+#feedback-tab a.noImage:before {
     display: none;
 }
 

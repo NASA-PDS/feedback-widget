@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	window.Feedback = function( options ) {
 		options = options || {};
 
-		var button = document.createElement("button");
+		var button = document.createElement("div");
 		button.setAttribute("id", "feedback-tab");
 
 		if ( Modernizr.touchevents && window.screen.width < 1025 ) {
@@ -82,8 +82,9 @@ document.addEventListener("DOMContentLoaded", function(){
 				},
 
 				setText: function(el, label, fontSize) {
-					var p = document.createElement("p");
-					p.append( document.createTextNode(label) );
+					var a = document.createElement("a");
+					a.setAttribute("href", "mailto:pds-operator@jpl.nasa.gov?subject=Feedback for pds.nasa.gov");
+					a.append( document.createTextNode(label) );
 					if ( fontSize !== "16" ) {
 						if ( !isNaN(fontSize) ) {
 							el.setAttribute("class", "noImage");
@@ -92,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function(){
 							console.log("Invalid value for font size. Please check the configuration file.");
 						}
 					}
-					el.appendChild(p);
+					el.appendChild(a);
 				},
 
 				setDimensions: function(el, width, height) {
